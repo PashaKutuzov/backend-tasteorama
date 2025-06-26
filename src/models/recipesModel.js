@@ -8,21 +8,44 @@ const recipesSchema = new mongoose.Schema(
     },
     category: {
       type: String,
+      enum: [
+        'Seafood',
+        'Lamb',
+        'Starter',
+        'Chicken',
+        'Beef',
+        'Dessert',
+        'Vegan',
+        'Pork',
+        'Vegetarian',
+        'Miscellaneous',
+        'Pasta',
+        'Breakfast',
+        'Side',
+        'Goat',
+        'Soup',
+      ],
+      default: null,
       required: true,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      required: false,
     },
     area: {
       type: String,
-      required: true,
+      required: false,
     },
     instructions: {
       type: String,
       required: true,
     },
     description: {
+      type: String,
+      required: true,
+      default: null,
+    },
+    cals: {
       type: String,
       required: false,
       default: null,
@@ -31,6 +54,10 @@ const recipesSchema = new mongoose.Schema(
       type: String,
       required: false,
       default: null,
+    },
+    time: {
+      type: String,
+      required: false,
     },
   },
   {
