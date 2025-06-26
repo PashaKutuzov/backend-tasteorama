@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 import initMongoConnection from './db/initMongoConnection.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
-
+import recipesRouter from './routers/recipes.js';
 const app = express();
 
 export default async function setupServer() {
@@ -20,11 +20,13 @@ export default async function setupServer() {
     })
   );
 
+  app.use('/api', recipesRouter);
+
   app.use(notFoundHandler);
   app.use(errorHandler);
 
   try {
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3030;
     await initMongoConnection();
 
     app.listen(PORT, (error) => {
