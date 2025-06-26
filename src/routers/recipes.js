@@ -1,5 +1,5 @@
 import express from 'express';
-import ctrlWrapper from '../validation/ctrlWrapper.js';
+import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
   getRecipesByIdController,
