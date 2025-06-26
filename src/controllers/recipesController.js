@@ -1,5 +1,11 @@
 import createHttpError from 'http-errors';
-import { getAllRecipes, getRecipeById } from '../services/recipesServices.js';
+import {
+  createRecipes,
+  getAllRecipes,
+  getRecipeById,
+  deleteRecipesById,
+  patchRecipes,
+} from '../services/recipesServices.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export async function getRecipesController(req, res) {
@@ -26,7 +32,42 @@ export async function getRecipesByIdController(req, res) {
   }
   res.json({
     status: 200,
-    message: `Successfully found contact with id ${recipeId}!`,
+    message: `Successfully found recipe with id ${recipeId}!`,
     data: recipe,
   });
+}
+
+export async function createrecipesController(req, res) {
+  const recipe = await createRecipes(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created a recipe!',
+    data: recipe,
+  });
+}
+export async function patchRecipesController(req, res) {
+  const { recipeId } = req.params;
+
+  const result = await patchRecipes(recipeId, req.body);
+
+  if (result === null) {
+    throw createHttpError(404, 'Not found');
+  }
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a recipe!',
+    data: result,
+  });
+}
+
+export async function deleteRecipesByIdController(req, res) {
+  const { recipeId } = req.params;
+
+  const result = await deleteRecipesById(recipeId);
+  console.log(result);
+  if (result === null) {
+    throw createHttpError(404, 'Not found');
+  }
+  res.status(204).end();
 }
