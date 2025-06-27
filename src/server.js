@@ -6,6 +6,9 @@ import initMongoConnection from './db/initMongoConnection.js';
 import notFoundHandler from './middlewares/notFoundHandler.js';
 import errorHandler from './middlewares/errorHandler.js';
 import recipesRouter from './routers/recipes.js';
+import categoriesRouter from './routers/categories.js';
+import ingredientsRouter from './routers/ingredients.js';
+
 const app = express();
 
 export default async function setupServer() {
@@ -21,6 +24,8 @@ export default async function setupServer() {
   );
 
   app.use('/api', recipesRouter);
+  app.use('/api', categoriesRouter);
+  app.use('/api', ingredientsRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);
