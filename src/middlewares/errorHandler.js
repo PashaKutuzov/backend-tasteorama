@@ -1,4 +1,5 @@
 import { isHttpError } from 'http-errors';
+
 export default function errorHandler(error, req, res, next) {
   if (isHttpError(error) === true) {
     return res
