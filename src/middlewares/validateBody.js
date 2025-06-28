@@ -6,11 +6,12 @@ export function validateBody(schema) {
       await schema.validateAsync(req.body, {
         abortEarly: false,
       });
+
       next();
     } catch (error) {
       console.log(error);
-
       const errors = error.details.map((detail) => detail.message);
+
       next(createHttpError.BadRequest(errors));
     }
   };
