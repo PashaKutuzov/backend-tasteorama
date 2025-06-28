@@ -12,6 +12,7 @@ const usersSchema = new Schema(
 
     password: { type: String, required: true },
     privacyPolicyAcceptedAt: { type: Date, required: true },
+    favorites: { type: Array, required: false, default: [] },
   },
   { timestamps: true, versionKey: false }
 );
