@@ -9,6 +9,7 @@ import authRouter from './routers/authRouter.js';
 import recipesRouter from './routers/recipes.js';
 import categoriesRouter from './routers/categories.js';
 import ingredientsRouter from './routers/ingredients.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 const app = express();
 
@@ -24,7 +25,7 @@ export default async function setupServer() {
       },
     })
   );
-
+  app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api/auth', authRouter);
   app.use('/api', recipesRouter);
   app.use('/api', categoriesRouter);
