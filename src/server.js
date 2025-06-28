@@ -10,10 +10,17 @@ import recipesRouter from './routers/recipes.js';
 import categoriesRouter from './routers/categories.js';
 import ingredientsRouter from './routers/ingredients.js';
 
+import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
+
 const app = express();
 
 export default async function setupServer() {
   app.use(cookieParser());
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
+
   app.use(cors());
   app.use(express.json());
 

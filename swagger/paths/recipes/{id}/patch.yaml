@@ -1,0 +1,94 @@
+tags:
+  - Recipes
+summary: Update recipe
+operationId: updateRecipe
+description: Update recipe
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '681b6a51254a7a7996d15746'
+    description: The unique identifier of the recipe to be updated.
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - _id
+          - title
+          - category
+          - description
+          - instructions
+          - timestamps
+        properties:
+          _id:
+            type: string
+            description: Recipe ID
+            example: '68419ace9cd45e2f9773af01'
+          title:
+            type: string
+            description: The full name of the recipe
+            example: 'BreakFest'
+          category:
+            type: string
+            description: The full name of the category
+            enum:
+              - Seafood
+              - Lamb
+              - Starter
+              - Chicken
+              - Beef
+              - Dessert
+              - Vegan
+              - Pork
+              - Vegetarian
+              - Miscellaneous
+              - Pasta
+              - Breakfast
+              - Side
+              - Goat
+              - Soup
+            example: 'Chicken'
+          description:
+            type: string
+            description: The full name of the description
+            example: 'Chicken'
+          instructions:
+            type: string
+            description: The full name of the preparation steps
+            example: 'Cut and fry the chicken'
+          timestamps:
+            type: string
+            format: date-time
+            description: Recipe last updated date
+            example: '2025-06-05T13:25:34.340+00:00'
+responses:
+  '200':
+    description: Successfully updated a recipe
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully patched a recipe!
+            data:
+              $ref: '../../../components/schemas/recipe.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'
