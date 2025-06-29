@@ -12,6 +12,8 @@ const usersSchema = new Schema(
 
     password: { type: String, required: true },
     privacyPolicyAcceptedAt: { type: Date, required: true },
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
+    myRecipes: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
   },
   { timestamps: true, versionKey: false }
 );
@@ -22,4 +24,4 @@ usersSchema.methods.toJSON = function () {
   return obj;
 };
 
-export const UsersCollection = model('users', usersSchema);
+export const UsersCollection = model('User', usersSchema);
