@@ -6,23 +6,28 @@ import {
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
+  addFavoriteRecipeController,
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { recipeSchema, updateRecipeSchema } from '../validation/recipe.js';
+import { authenticate } from '../middlewares/authenticate.js';
+
 import { upload } from '../middlewares/multer.js';
 const router = express.Router();
 const jsonParser = express.json();
-router.get('/recipes', ctrlWrapper(getRecipesController));
+router.get('/recipes', authenticate, ctrlWrapper(getRecipesController));
 
 router.get(
   '/recipes/:recipeId',
+  authenticate,
   isValidId,
   ctrlWrapper(getRecipesByIdController)
 );
 
 router.post(
   '/recipes',
+  authenticate,
   jsonParser,
   upload.single('thumb'),
   validateBody(recipeSchema),
@@ -30,14 +35,23 @@ router.post(
 );
 router.patch(
   '/recipes/:recipeId',
+  authenticate,
   jsonParser,
   validateBody(updateRecipeSchema),
   ctrlWrapper(patchRecipesController)
 );
 router.delete(
   '/recipes/:recipeId',
+  authenticate,
   isValidId,
   ctrlWrapper(deleteRecipesByIdController)
+);
+
+router.post(
+  '/recipes/favorite',
+  authenticate,
+  jsonParser,
+  ctrlWrapper(addFavoriteRecipeController)
 );
 
 export default router;

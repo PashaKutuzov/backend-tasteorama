@@ -12,7 +12,6 @@ import categoriesRouter from './routers/categories.js';
 import ingredientsRouter from './routers/ingredients.js';
 import { UPLOAD_DIR } from './constants/index.js';
 
-import { UPLOAD_DIR } from './constants/index.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const app = express();
