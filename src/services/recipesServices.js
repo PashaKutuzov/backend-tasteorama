@@ -1,6 +1,40 @@
 import { recipeModel } from '../models/recipesModel.js';
 import { UsersCollection } from '../models/userModel.js';
 
+export async function getRecipes({
+  page,
+  perPage,
+  sortBy,
+  sortOrder,
+  filter = {},
+}) {
+  const skip = page > 0 ? (page - 1) * perPage : 0;
+
+  const recipeQuery = recipeModel.find();
+
+  if (filter.type) {
+    recipeQuery.where('contactType').equals(filter.type);
+  }
+  const [totalItems, data] = await Promise.all([
+    recipeModel.countDocuments(recipeQuery.getQuery()),
+    recipeQuery
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrder }),
+  ]);
+  const totalPages = Math.ceil(totalItems / perPage);
+
+  return {
+    data,
+    page,
+    perPage,
+    totalItems,
+    totalPages,
+    hasPreviousPage: page > 1,
+    hasNextPage: totalPages > page,
+  };
+}
+
 export async function getAllRecipes({
   page,
   perPage,
