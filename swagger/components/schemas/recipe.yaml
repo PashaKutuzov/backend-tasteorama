@@ -1,0 +1,87 @@
+type: object
+required:
+  - userId
+  - title
+  - category
+  - instructions
+  - description
+  - timestamps
+  - ingredients
+
+properties:
+  userId:
+    type: string
+    description: Recipe ID
+    example: '68419ace9cd45e2f9773af01'
+
+  title:
+    type: string
+    description: The full name of the recipe
+    example: 'BreakFest'
+
+  category:
+    type: string
+    description: The full name of the category
+    enum:
+      - Seafood
+      - Lamb
+      - Starter
+      - Chicken
+      - Beef
+      - Dessert
+      - Vegan
+      - Pork
+      - Vegetarian
+      - Miscellaneous
+      - Pasta
+      - Breakfast
+      - Side
+      - Goat
+      - Soup
+    example: 'Chicken'
+
+  ingredients:
+    type: array
+    description: List of recipe ingredients
+    items:
+      type: string
+      enum:
+        - Squid
+        - Cabbage
+        - Baking Powder
+        - Smoked Haddock
+        - Pears
+        - Spring Onions
+        - Ginger Cordial
+        - Almond Extract
+        - Tinned Tomatos
+        - Minced Beef
+        - Gruyère
+        - Powdered Sugar
+        - Stilton Cheese
+        - Pork
+        - Sake
+        - Cayenne Pepper
+        - Jalapeno
+        - Barbeque Sauce
+        - Scotch Bonnet
+        - Haddock
+    example:
+      - Pork
+      - Tinned Tomatos
+
+  description:
+    type: string
+    description: The full name of the description
+    example: 'A tasty chicken dish.'
+
+  instructions:
+    type: string
+    description: The full name of the preparation steps
+    example: 'Cut and fry the chicken'
+
+  timestamps:
+    type: string
+    format: date-time
+    description: Recipe last updated date
+    example: '2025-06-05T13:25:34.340+00:00'

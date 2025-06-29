@@ -1,0 +1,853 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Recipies app",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "This is a documentation of recipes app"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Recipies",
+      "description": "Operations about recipies."
+    },
+    {
+      "name": "Auth",
+      "description": "Auth operations."
+    }
+  ],
+  "paths": {
+    "/recipes/{id}": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Get recipe by id",
+        "operationId": "getRecipeById",
+        "description": "Get recipe by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get recipe by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found recipe with id 65ca67e7ae7f10c88b598384!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/recipe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Recipe not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recipes not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Update recipe",
+        "operationId": "updateRecipe",
+        "description": "Update recipe",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "681b6a51254a7a7996d15746"
+            },
+            "description": "The unique identifier of the recipe to be updated."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "_id",
+                  "title",
+                  "category",
+                  "description",
+                  "instructions",
+                  "timestamps"
+                ],
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "description": "Recipe ID",
+                    "example": "68419ace9cd45e2f9773af01"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The full name of the recipe",
+                    "example": "BreakFest"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "The full name of the category",
+                    "enum": [
+                      "Seafood",
+                      "Lamb",
+                      "Starter",
+                      "Chicken",
+                      "Beef",
+                      "Dessert",
+                      "Vegan",
+                      "Pork",
+                      "Vegetarian",
+                      "Miscellaneous",
+                      "Pasta",
+                      "Breakfast",
+                      "Side",
+                      "Goat",
+                      "Soup"
+                    ],
+                    "example": "Chicken"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The full name of the description",
+                    "example": "Chicken"
+                  },
+                  "instructions": {
+                    "type": "string",
+                    "description": "The full name of the preparation steps",
+                    "example": "Cut and fry the chicken"
+                  },
+                  "timestamps": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Recipe last updated date",
+                    "example": "2025-06-05T13:25:34.340+00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated a recipe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully patched a recipe!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/recipe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Delete recipe by id",
+        "operationId": "deleteContact",
+        "description": "Delete recipe by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "681b6a51254a7a7996d15746"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted recipe. No content returned."
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Recipe not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recipe not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/recipes": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Get list of Recipes",
+        "operationId": "getRecipes",
+        "description": "Get list of recipes with this endpoint",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "_id"
+            },
+            "description": "All recipes fields can be used. Default is `_id`."
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Seafood",
+                "Lamb",
+                "Starter",
+                "Chicken",
+                "Beef",
+                "Dessert",
+                "Vegan",
+                "Pork",
+                "Vegetarian",
+                "Miscellaneous",
+                "Pasta",
+                "Breakfast",
+                "Side",
+                "Goat",
+                "Soup"
+              ],
+              "example": "Breakfast"
+            },
+            "description": "Filter recipes by category."
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string",
+              "example": "BreakFest"
+            },
+            "description": "Filter recipes by title."
+          },
+          {
+            "in": "query",
+            "name": "ingredients",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Squid",
+                "Cabbage",
+                "Baking Powder",
+                "Smoked Haddock",
+                "Pears",
+                "Spring Onions",
+                "Ginger Cordial",
+                "Almond Extract",
+                "Tinned Tomatos",
+                "Minced Beef",
+                "Gruyère",
+                "Powdered Sugar",
+                "Stilton Cheese",
+                "Pork",
+                "Sake",
+                "Cayenne Pepper",
+                "Jalapeno",
+                "Barbeque Sauce",
+                "Scotch Bonnet",
+                "Haddock"
+              ],
+              "example": "Pork"
+            },
+            "description": "Filter recipes by ingredient."
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string",
+              "example": "A tasty chicken dish."
+            },
+            "description": "Filter recipes by description."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found recipes!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found recipes!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "data",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/recipe"
+                          }
+                        },
+                        "page": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "perPage": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "totalItems": {
+                          "type": "number",
+                          "example": 4
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Recipes not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recipes not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Create recipe",
+        "operationId": "createRecipe",
+        "description": "Create Recipe",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "title",
+                  "category",
+                  "instructions",
+                  "description",
+                  "timestamps",
+                  "ingredients"
+                ],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "description": "Recipe ID",
+                    "example": "68419ace9cd45e2f9773af01"
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "The full name of the recipe",
+                    "example": "BreakFest"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "The full name of the category",
+                    "enum": [
+                      "Seafood",
+                      "Lamb",
+                      "Starter",
+                      "Chicken",
+                      "Beef",
+                      "Dessert",
+                      "Vegan",
+                      "Pork",
+                      "Vegetarian",
+                      "Miscellaneous",
+                      "Pasta",
+                      "Breakfast",
+                      "Side",
+                      "Goat",
+                      "Soup"
+                    ],
+                    "example": "Chicken"
+                  },
+                  "ingredients": {
+                    "type": "array",
+                    "description": "List of recipe ingredients",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "Squid",
+                        "Cabbage",
+                        "Baking Powder",
+                        "Smoked Haddock",
+                        "Pears",
+                        "Spring Onions",
+                        "Ginger Cordial",
+                        "Almond Extract",
+                        "Tinned Tomatos",
+                        "Minced Beef",
+                        "Gruyère",
+                        "Powdered Sugar",
+                        "Stilton Cheese",
+                        "Pork",
+                        "Sake",
+                        "Cayenne Pepper",
+                        "Jalapeno",
+                        "Barbeque Sauce",
+                        "Scotch Bonnet",
+                        "Haddock"
+                      ]
+                    },
+                    "example": [
+                      "Pork",
+                      "Tinned Tomatos"
+                    ]
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The full name of the description",
+                    "example": "A tasty chicken dish."
+                  },
+                  "instructions": {
+                    "type": "string",
+                    "description": "The full name of the preparation steps",
+                    "example": "Cut and fry the chicken"
+                  },
+                  "timestamps": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Recipe creation timestamp",
+                    "example": "2025-06-05T13:25:34.340+00:00"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Creates a recipe",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully created a recipe!"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/recipe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "recipe": {
+        "type": "object",
+        "required": [
+          "userId",
+          "title",
+          "category",
+          "instructions",
+          "description",
+          "timestamps",
+          "ingredients"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Recipe ID",
+            "example": "68419ace9cd45e2f9773af01"
+          },
+          "title": {
+            "type": "string",
+            "description": "The full name of the recipe",
+            "example": "BreakFest"
+          },
+          "category": {
+            "type": "string",
+            "description": "The full name of the category",
+            "enum": [
+              "Seafood",
+              "Lamb",
+              "Starter",
+              "Chicken",
+              "Beef",
+              "Dessert",
+              "Vegan",
+              "Pork",
+              "Vegetarian",
+              "Miscellaneous",
+              "Pasta",
+              "Breakfast",
+              "Side",
+              "Goat",
+              "Soup"
+            ],
+            "example": "Chicken"
+          },
+          "ingredients": {
+            "type": "array",
+            "description": "List of recipe ingredients",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Squid",
+                "Cabbage",
+                "Baking Powder",
+                "Smoked Haddock",
+                "Pears",
+                "Spring Onions",
+                "Ginger Cordial",
+                "Almond Extract",
+                "Tinned Tomatos",
+                "Minced Beef",
+                "Gruyère",
+                "Powdered Sugar",
+                "Stilton Cheese",
+                "Pork",
+                "Sake",
+                "Cayenne Pepper",
+                "Jalapeno",
+                "Barbeque Sauce",
+                "Scotch Bonnet",
+                "Haddock"
+              ]
+            },
+            "example": [
+              "Pork",
+              "Tinned Tomatos"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "description": "The full name of the description",
+            "example": "A tasty chicken dish."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "The full name of the preparation steps",
+            "example": "Cut and fry the chicken"
+          },
+          "timestamps": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Recipe last updated date",
+            "example": "2025-06-05T13:25:34.340+00:00"
+          }
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal Server error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

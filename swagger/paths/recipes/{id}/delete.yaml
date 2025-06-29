@@ -1,0 +1,40 @@
+tags:
+  - Recipes
+summary: Delete recipe by id
+operationId: deleteContact
+description: Delete recipe by id
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '681b6a51254a7a7996d15746'
+responses:
+  '204':
+    description: Successfully deleted recipe. No content returned.
+
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+
+  '404':
+    description: Recipe not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Recipe not found
+
+  '500':
+    $ref: '../../../components/responses/500.yaml'
