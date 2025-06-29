@@ -6,11 +6,12 @@ import {
   deleteRecipesById,
   patchRecipes,
   addFavoriteRecipe,
+  deleteFavoriteRecipe,
 } from '../services/recipesServices.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-// import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
-// import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-// import { getEnvVar } from '../utils/getEnvVar.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
@@ -43,9 +44,9 @@ export async function getRecipesByIdController(req, res) {
   if (recipe === null) {
     throw createHttpError(404, 'Not found');
   }
-  if (recipe.userId.toString() !== userId.toString()) {
-    throw new createHttpError.Forbidden('Access denied for recipes');
-  }
+  // if (recipe.userId.toString() !== userId.toString()) {
+  //   throw new createHttpError.Forbidden('Access denied for recipes');
+  // }
   res.json({
     status: 200,
     message: `Successfully found recipe with id ${recipeId}!`,
@@ -55,19 +56,20 @@ export async function getRecipesByIdController(req, res) {
 
 export async function createrecipesController(req, res, next) {
   try {
-    const { body, file } = req;
+    const { body, file, user } = req;
 
     const recipeData = { ...body };
 
     if (file) {
-      //   const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
-      //   const thumbUrl = useCloudinary
-      // ? await saveFileToCloudinary(file)
-      // : await saveFileToUploadDir(file);
-      //   recipeData.thumb = thumbUrl;
+      const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
+      const thumbUrl = useCloudinary
+        ? await saveFileToCloudinary(file)
+        : await saveFileToUploadDir(file);
+      recipeData.thumb = thumbUrl;
     } else if (body.thumb) {
       recipeData.thumb = body.thumb;
     }
+    recipeData.userId = user._id;
 
     const recipe = await createRecipes(recipeData);
 
@@ -115,20 +117,27 @@ export async function addFavoriteRecipeController(req, res, next) {
 
     const user = await addFavoriteRecipe(userId, recipeId);
 
-    // const recipe = await addFavoriteRecipe(recipeId, userId);
-
     if (!user) {
       throw createHttpError(404, 'Recipe not found or access denied');
     }
-
-    // if (user.favorites.includes(recipeId)) {
-    //   return res.status(200).json({ message: 'Recipe already in favorites' });
-    // }
-    // user.favorites.push(recipeId);
-    // await user.save();
 
     res.status(201).json({ message: 'Recipe added to favorites', data: user });
   } catch (error) {
     next(error);
   }
+}
+
+export async function deleteFavoriteRecipeController(req, res, next) {
+  const userId = req.user._id;
+
+  const { id: recipeId } = req.params;
+  const user = await deleteFavoriteRecipe(userId, recipeId);
+  if (!user) {
+    throw createHttpError(404, 'Recipe not found or access denied');
+  }
+  res.status(200).json({
+    status: 200,
+    message: 'Recipe removed from favorites',
+    data: user,
+  });
 }
