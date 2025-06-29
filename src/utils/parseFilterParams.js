@@ -3,38 +3,42 @@ function parsedType(value) {
   if (!isString) {
     return;
   }
-  const isType = (value) =>
-    [
-      'Seafood',
-      'Lamb',
-      'Starter',
-      'Chicken',
-      'Beef',
-      'Dessert',
-      'Vegan',
-      'Pork',
-      'Vegetarian',
-      'Miscellaneous',
-      'Pasta',
-      'Breakfast',
-      'Side',
-      'Goat',
-      'Soup',
-    ].includes(value);
-  if (isType(value)) return value;
+
+  const isType = [
+    'Seafood',
+    'Lamb',
+    'Starter',
+    'Chicken',
+    'Beef',
+    'Dessert',
+    'Vegan',
+    'Pork',
+    'Vegetarian',
+    'Miscellaneous',
+    'Pasta',
+    'Breakfast',
+    'Side',
+    'Goat',
+    'Soup',
+  ].includes(value);
+
+  if (isType) return value;
 }
-// function parsedIsFavourite(value) {
-//   if (value === 'true') return true;
-//   if (value === 'false') return false;
-//   return;
-// }
+
+function parsedIsFavourite(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return;
+}
+
 export function parseFilterParams(query) {
-  const { type } = query;
+  const { type, isFavourite } = query;
 
   const parseType = parsedType(type);
-  //   const parseIsFavourite = parsedIsFavourite(isFavourite);
+  const parseIsFavourite = parsedIsFavourite(isFavourite);
+
   return {
     type: parseType,
-    // isFavourite: parseIsFavourite,
+    isFavourite: parseIsFavourite,
   };
 }

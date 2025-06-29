@@ -7,6 +7,7 @@ import {
   deleteRecipesByIdController,
   patchRecipesController,
   addFavoriteRecipeController,
+  deleteFavoriteRecipeController,
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -52,6 +53,13 @@ router.post(
   authenticate,
   jsonParser,
   ctrlWrapper(addFavoriteRecipeController)
+);
+
+router.delete(
+  '/recipes/favorite/:id',
+  authenticate,
+  isValidId,
+  ctrlWrapper(deleteFavoriteRecipeController)
 );
 
 export default router;

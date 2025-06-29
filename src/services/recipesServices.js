@@ -62,3 +62,18 @@ export async function addFavoriteRecipe(userId, recipeId) {
   );
   return updatedUser;
 }
+
+export async function deleteFavoriteRecipe(userId, recipeId) {
+  const user = await UsersCollection.findById(userId);
+  const updatedFavorites = user.favorites.filter(
+    (favId) => favId.toString() !== recipeId
+  );
+
+  const updatedUser = await UsersCollection.findByIdAndUpdate(
+    userId,
+    { favorites: updatedFavorites },
+    { new: true }
+  );
+
+  return updatedUser;
+}
