@@ -3,6 +3,7 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
   getRecipesByIdController,
+  getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
@@ -17,7 +18,10 @@ import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/multer.js';
 const router = express.Router();
 const jsonParser = express.json();
-router.get('/recipes', authenticate, ctrlWrapper(getRecipesController));
+
+router.get('/recipes', ctrlWrapper(getAllRecipesController));
+
+router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
 
 router.get(
   '/recipes/:recipeId',

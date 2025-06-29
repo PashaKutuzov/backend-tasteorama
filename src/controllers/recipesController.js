@@ -2,6 +2,7 @@ import createHttpError from 'http-errors';
 import {
   createRecipes,
   getAllRecipes,
+  getRecipes,
   getRecipeById,
   deleteRecipesById,
   patchRecipes,
@@ -14,6 +15,24 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+
+export async function getAllRecipesController(req, res) {
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+  const recipes = await getRecipes({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+  res.json({
+    status: 200,
+    message: 'Successfully found all recipes!',
+    data: recipes,
+  });
+}
 
 export async function getRecipesController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
