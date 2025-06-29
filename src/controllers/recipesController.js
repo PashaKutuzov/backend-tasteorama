@@ -7,7 +7,9 @@ import {
   patchRecipes,
 } from '../services/recipesServices.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
 export async function getRecipesController(req, res) {
   //   const recipeId = req.recipe._id;
   const { page, perPage } = parsePaginationParams(req.query);
@@ -37,15 +39,35 @@ export async function getRecipesByIdController(req, res) {
   });
 }
 
-export async function createrecipesController(req, res) {
-  const recipe = await createRecipes(req.body);
+export async function createrecipesController(req, res, next) {
+  try {
+    const { body, file } = req;
 
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully created a recipe!',
-    data: recipe,
-  });
+    const recipeData = { ...body };
+
+    if (file) {
+      const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
+      const thumbUrl = useCloudinary
+        ? await saveFileToCloudinary(file)
+        : await saveFileToUploadDir(file);
+
+      recipeData.thumb = thumbUrl;
+    } else if (body.thumb) {
+      recipeData.thumb = body.thumb;
+    }
+
+    const recipe = await createRecipes(recipeData);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a recipe!',
+      data: recipe,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
+
 export async function patchRecipesController(req, res) {
   const { recipeId } = req.params;
 
