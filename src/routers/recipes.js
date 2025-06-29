@@ -13,6 +13,7 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { recipeSchema, updateRecipeSchema } from '../validation/recipe.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
+import { upload } from '../middlewares/multer.js';
 const router = express.Router();
 const jsonParser = express.json();
 router.get('/recipes', authenticate, ctrlWrapper(getRecipesController));
@@ -28,6 +29,7 @@ router.post(
   '/recipes',
   authenticate,
   jsonParser,
+  upload.single('thumb'),
   validateBody(recipeSchema),
   ctrlWrapper(createrecipesController)
 );
