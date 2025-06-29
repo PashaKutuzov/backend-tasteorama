@@ -33,7 +33,7 @@ router.get(
 router.post(
   '/recipes',
   authenticate,
-  jsonParser,
+
   upload.single('thumb'),
   validateBody(recipeSchema),
   ctrlWrapper(createrecipesController)
@@ -41,7 +41,8 @@ router.post(
 router.patch(
   '/recipes/:recipeId',
   authenticate,
-  jsonParser,
+  upload.single('thumb'),
+  // jsonParser,
   validateBody(updateRecipeSchema),
   ctrlWrapper(patchRecipesController)
 );
