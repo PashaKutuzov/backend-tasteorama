@@ -8,9 +8,9 @@ import {
   addFavoriteRecipe,
 } from '../services/recipesServices.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
-import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
-import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import { getEnvVar } from '../utils/getEnvVar.js';
+// import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+// import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+// import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
@@ -60,12 +60,11 @@ export async function createrecipesController(req, res, next) {
     const recipeData = { ...body };
 
     if (file) {
-      const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
-      const thumbUrl = useCloudinary
-        ? await saveFileToCloudinary(file)
-        : await saveFileToUploadDir(file);
-
-      recipeData.thumb = thumbUrl;
+      //   const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
+      //   const thumbUrl = useCloudinary
+      // ? await saveFileToCloudinary(file)
+      // : await saveFileToUploadDir(file);
+      //   recipeData.thumb = thumbUrl;
     } else if (body.thumb) {
       recipeData.thumb = body.thumb;
     }
@@ -118,10 +117,9 @@ export async function addFavoriteRecipeController(req, res, next) {
 
     // const recipe = await addFavoriteRecipe(recipeId, userId);
 
-    // if (!recipe) {
-    //   throw createHttpError(404, 'Recipe not found or access denied');
-    // }
-    //
+    if (!user) {
+      throw createHttpError(404, 'Recipe not found or access denied');
+    }
 
     // if (user.favorites.includes(recipeId)) {
     //   return res.status(200).json({ message: 'Recipe already in favorites' });

@@ -13,6 +13,7 @@ const usersSchema = new Schema(
     password: { type: String, required: true },
     privacyPolicyAcceptedAt: { type: Date, required: true },
     favorites: { type: Array, required: false, default: [] },
+    // accessToken: { type: String, required: true },
   },
   { timestamps: true, versionKey: false }
 );
