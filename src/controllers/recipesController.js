@@ -76,9 +76,7 @@ export async function getRecipesByIdController(req, res) {
 export async function createrecipesController(req, res, next) {
   try {
     const { body, file, user } = req;
-    console.log('BODY:', body);
-    console.log('FILE:', file);
-    console.log('USER:', user);
+
     const recipeData = { ...body };
 
     if (file) {
@@ -100,25 +98,9 @@ export async function createrecipesController(req, res, next) {
       data: recipe,
     });
   } catch (error) {
-    console.error('Error creating recipe:', error);
     next(error);
   }
 }
-
-// export async function patchRecipesController(req, res) {
-//   const { recipeId } = req.params;
-//   const userId = req.user._id;
-//   const result = await patchRecipes(recipeId, req.body, userId);
-
-//   if (result === null) {
-//     throw createHttpError(404, 'Not found');
-//   }
-//   res.status(200).json({
-//     status: 200,
-//     message: 'Successfully patched a recipe!',
-//     data: result,
-//   });
-// }
 
 export async function patchRecipesController(req, res, next) {
   try {
