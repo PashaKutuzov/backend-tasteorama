@@ -28,6 +28,13 @@ const recipesSchema = new mongoose.Schema(
       default: null,
       required: true,
     },
+
+    // category: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'Categories',
+    //   required: true,
+    // },
+
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: false,
@@ -59,6 +66,20 @@ const recipesSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+
+    // ingredients: [
+    //   {
+    //     id: {
+    //       type: mongoose.Schema.Types.ObjectId,
+    //       ref: 'Ingredient', // посилання на колекцію інгредієнтів
+    //       required: true,
+    //     },
+    //     measure: {
+    //       type: String,
+    //       required: true,
+    //     },
+    //   },
+    // ],
   },
   {
     timestamps: true,
