@@ -40,4 +40,63 @@ router.delete(
   ctrlWrapper(deleteRecipesByIdController)
 );
 
+// Роутер для рецептів
+
+// // Публічний маршрут — отримати всі рецепти з фільтрацією, пошуком, пагінацією
+// router.get('/recipes', ctrlWrapper(getAllRecipesController));
+
+// // Приватний — власні рецепти користувача
+// router.get('/recipes/own', authenticate, ctrlWrapper(getRecipesController));
+
+// // Публічний — отримати рецепт за id
+// router.get(
+//   '/recipes/:recipeId',
+//   isValidId,
+//   ctrlWrapper(getRecipesByIdController)
+// );
+
+// // Приватний — створити рецепт
+// router.post(
+//   '/recipes',
+//   authenticate,
+//   jsonParser,
+//   upload.single('thumb'),
+//   validateBody(recipeSchema),
+//   ctrlWrapper(createrecipesController)
+// );
+
+// // Приватний — оновити рецепт (тільки власник)
+// router.patch(
+//   '/recipes/:recipeId',
+//   authenticate,
+//   isValidId,
+//   jsonParser,
+//   validateBody(updateRecipeSchema),
+//   ctrlWrapper(patchRecipesController)
+// );
+
+// // Приватний — видалити рецепт (тільки власник)
+// router.delete(
+//   '/recipes/:recipeId',
+//   authenticate,
+//   isValidId,
+//   ctrlWrapper(deleteRecipesByIdController)
+// );
+
+// // Приватний — додати рецепт у улюблені
+// router.post(
+//   '/favorites/:recipeId',
+//   authenticate,
+//   isValidId,
+//   ctrlWrapper(addFavoriteRecipeController)
+// );
+
+// // Приватний — видалити рецепт з улюблених
+// router.delete(
+//   '/favorites/:recipeId',
+//   authenticate,
+//   isValidId,
+//   ctrlWrapper(deleteFavoriteRecipeController)
+// );
+
 export default router;
