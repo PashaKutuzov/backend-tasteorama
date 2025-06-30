@@ -33,7 +33,7 @@ router.get(
 router.post(
   '/recipes',
   authenticate,
-
+  // jsonParser,
   upload.single('thumb'),
   validateBody(recipeSchema),
   ctrlWrapper(createrecipesController)
