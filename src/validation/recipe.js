@@ -8,6 +8,32 @@ export const recipeSchema = Joi.object({
   instructions: Joi.string().min(1).max(1200).required(),
   thumb: Joi.string().default(null),
   owner: Joi.string(),
+  ingredients: Joi.array()
+    .items(
+      Joi.string().valid(
+        'Squid',
+        'Cabbage',
+        'Baking Powder',
+        'Smoked Haddock',
+        'Pears',
+        'Spring Onions',
+        'Ginger Cordial',
+        'Almond Extract',
+        'Tinned Tomatos',
+        'Minced Beef',
+        'Gruyère',
+        'Powdered Sugar',
+        'Stilton Cheese',
+        'Pork',
+        'Sake',
+        'Cayenne Pepper',
+        'Jalapeno',
+        'Barbeque Sauce',
+        'Scotch Bonnet',
+        'Haddock'
+      )
+    )
+    .default([]),
   category: Joi.string()
     .valid(
       'Seafood',

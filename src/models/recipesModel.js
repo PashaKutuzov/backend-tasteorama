@@ -66,6 +66,7 @@ const recipesSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+<<<<<<< HEAD
 
     // ingredients: [
     //   {
@@ -80,6 +81,44 @@ const recipesSchema = new mongoose.Schema(
     //     },
     //   },
     // ],
+=======
+    ingredients: {
+      type: [String],
+      enum: [
+        'Squid',
+        'Cabbage',
+        'Baking Powder',
+        'Smoked Haddock',
+        'Pears',
+        'Spring Onions',
+        'Ginger Cordial',
+        'Almond Extract',
+        'Tinned Tomatos',
+        'Minced Beef',
+        'Gruyère',
+        'Powdered Sugar',
+        'Stilton Cheese',
+        'Pork',
+        'Sake',
+        'Cayenne Pepper',
+        'Jalapeno',
+        'Barbeque Sauce',
+        'Scotch Bonnet',
+        'Haddock',
+      ],
+      default: [],
+      required: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+    },
+    // isFavorite: {
+    //   type: Boolean,
+    //   required: false,
+    //   default: false,
+    // },
+>>>>>>> origin/main
   },
   {
     timestamps: true,

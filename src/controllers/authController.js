@@ -20,7 +20,9 @@ const setupSession = (res, session, maxAge = ONE_DAY) => {
 
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
+  const session = await loginUser(req.body);
 
+  setupSession(res, session);
   res.status(201).json({
     status: 201,
     message: 'User created successfully',
