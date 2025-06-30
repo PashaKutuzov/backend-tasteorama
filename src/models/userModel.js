@@ -13,7 +13,7 @@ const usersSchema = new Schema(
     password: { type: String, required: true },
     privacyPolicyAcceptedAt: { type: Date, required: true },
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
-    myRecipes: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
+    owner: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
   },
   { timestamps: true, versionKey: false }
 );
