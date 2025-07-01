@@ -3,7 +3,7 @@ import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
   // getRecipesByIdController,
-  getUsersRecipesByIdController,
+  // getUsersRecipesByIdController,
   getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
@@ -11,6 +11,7 @@ import {
   addFavoriteRecipeController,
   deleteFavoriteRecipeController,
   getFavoriteRecipeController,
+  getRecipesByIdController,
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -43,13 +44,18 @@ router.delete(
 router.get('/recipes', ctrlWrapper(getAllRecipesController));
 
 router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
-
 router.get(
   '/recipes/:recipeId',
-  authenticate,
+
   // isValidId,
-  ctrlWrapper(getUsersRecipesByIdController)
+  ctrlWrapper(getRecipesByIdController)
 );
+// router.get(
+//   '/recipes/:recipeId',
+//   authenticate,
+//   // isValidId,
+//   ctrlWrapper(getUsersRecipesByIdController)
+// );
 
 router.post(
   '/recipes',
