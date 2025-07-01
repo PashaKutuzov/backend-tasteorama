@@ -1,0 +1,85 @@
+tags:
+  - Auth
+summary: User Login
+operationId: loginUser
+description: |
+  **User Login**
+
+  This endpoint allows registered users to log in to their account by providing their email and password.
+
+  ### Required Fields
+  - **Email**: The email address associated with the user's account.
+  - **Password**: The password for the user's account.
+  - **Privacy Policy Accepted At**: ISO 8601 date-time string indicating when user accepted the privacy policy.
+
+  ### How to Use
+  - **Email**: Enter the email address used during registration.
+  - **Password**: Provide the password associated with the email address.
+  - **Privacy Policy Accepted At**: Usually sent during registration, but may be required in specific flows.
+
+  Upon successful login, the response will include an access token that can be used to authenticate further requests.
+
+  ### Security
+  - This endpoint does not require authentication for accessing the login functionality.
+security: []
+requestBody:
+  content:
+    application/x-www-form-urlencoded:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            description: "The email address associated with the user's account."
+            example: 'userone@example.com'
+          password:
+            type: string
+            description: "The password for the user's account."
+            example: '123Qwe!xX'
+          privacyPolicyAcceptedAt:
+            type: string
+            format: date-time
+            description: 'ISO 8601 timestamp when user accepted the privacy policy.'
+            example: '2025-06-28T12:00:00.000Z'
+
+responses:
+  '200':
+    description: |
+      **Successfully Logged In**
+
+      The login was successful, and an access token has been provided. Use this token for subsequent authenticated requests.
+
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+              description: 'HTTP status code indicating a successful login'
+            message:
+              type: string
+              example: 'Successfully logged in!'
+              description: 'Confirmation message indicating successful login'
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+                  description: 'The access token to be used for authenticated requests'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+
+  '500':
+    $ref: '../../../components/responses/500.yaml'
