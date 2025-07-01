@@ -30,6 +30,22 @@ paths:
       $ref: '../swagger/paths/recipes/get.yaml'
     post:
       $ref: '../swagger/paths/recipes/post.yaml'
+  /recipes/user:
+    get:
+      $ref: '../swagger/paths/recipes/user/get.yaml'
+  /recipes/favorite:
+    post:
+      $ref: '../swagger/paths/recipes/favorite/post.yaml'
+  /recipes/favorite/{id}:
+    delete:
+      $ref: '../swagger/paths/recipes/favorite/{id}/delete.yaml'
+  /categories:
+    get:
+      $ref: '../swagger/paths/categories/get.yaml'
+  /ingredients:
+    get:
+      $ref: '../swagger/paths/ingredients/get.yaml'
+
   /auth/register:
     post:
       $ref: ../swagger/paths/auth/register/post.yaml

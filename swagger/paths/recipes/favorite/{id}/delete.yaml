@@ -1,0 +1,43 @@
+tags:
+  - Recipes
+summary: Remove recipe from favorites
+operationId: removeRecipeFromFavorites
+description: Remove a recipe from the user's list of favorite recipes by ID
+security:
+  - bearerAuth: []
+
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '681b6a51254a7a7996d15746'
+    description: ID of the recipe to remove from favorites
+
+responses:
+  '204':
+    description: Successfully removed recipe from favorites. No content returned.
+
+  '401':
+    $ref: '../../../../components/responses/401.yaml'
+
+  '404':
+    description: Recipe not found in favorites
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Recipe not found in favorites
+
+  '500':
+    $ref: '../../../../components/responses/500.yaml'
