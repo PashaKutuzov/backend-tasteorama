@@ -12,10 +12,7 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  - url: https://backend-tasteorama.onrender.com
-    description: Production server
-  - url: http://127.0.0.1:8080
-    description: Local development server
+  - url: http://localhost:3000
 
 paths:
   /recipes/{id}:
@@ -30,40 +27,6 @@ paths:
       $ref: '../swagger/paths/recipes/get.yaml'
     post:
       $ref: '../swagger/paths/recipes/post.yaml'
-  /recipes/user:
-    get:
-      $ref: '../swagger/paths/recipes/user/get.yaml'
-  /recipes/favorite:
-    post:
-      $ref: '../swagger/paths/recipes/favorite/post.yaml'
-  /recipes/favorite/{id}:
-    delete:
-      $ref: '../swagger/paths/recipes/favorite/{id}/delete.yaml'
-  /categories:
-    get:
-      $ref: '../swagger/paths/categories/get.yaml'
-  /ingredients:
-    get:
-      $ref: '../swagger/paths/ingredients/get.yaml'
-
-  /auth/register:
-    post:
-      $ref: ../swagger/paths/auth/register/post.yaml
-  /auth/login:
-    post:
-      $ref: ../swagger/paths/auth/login/post.yaml
-  /auth/refresh:
-    post:
-      $ref: ../swagger/paths/auth/refresh/post.yaml
-  /auth/logout:
-    post:
-      $ref: ../swagger/paths/auth/logout/post.yaml
-  /auth/reset-pwd:
-    post:
-      $ref: ../swagger/paths/auth/reset-pwd/post.yaml
-  /auth/send-reset-email:
-    post:
-      $ref: ../swagger/paths/auth/send-reset-email/post.yaml
 
 components:
   securitySchemes:
