@@ -1,10 +1,7 @@
 import { UsersCollection } from '../models/userModel.js';
-import '../models/recipesModel.js';
 
 export const getCurrentUser = async (req, res) => {
-  const user = await UsersCollection.findById(req.user._id)
-    .populate('favorites')
-    .populate('myRecipes');
+  const user = await UsersCollection.findById(req.user._id);
 
   res.status(200).json({
     status: 200,
