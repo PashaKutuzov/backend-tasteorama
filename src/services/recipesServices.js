@@ -1,5 +1,7 @@
+import mongoose from 'mongoose';
 import { recipeModel } from '../models/recipesModel.js';
 import { UsersCollection } from '../models/userModel.js';
+import createHttpError from 'http-errors';
 
 export async function getRecipes({
   page,
@@ -70,7 +72,11 @@ export async function getAllRecipes({
   };
 }
 
-export function getRecipeById(recipeId, userId) {
+// export function getRecipeById(recipeId) {
+//   return recipeModel.findById({ _id: recipeId });
+// }
+
+export function getUsersRecipeById(recipeId, userId) {
   return recipeModel.findById({ _id: recipeId, userId });
 }
 
@@ -86,15 +92,43 @@ export function deleteRecipesById(recipeId, userId) {
   return recipeModel.findOneAndDelete({ _id: recipeId, userId });
 }
 
-export async function addFavoriteRecipe(userId, recipeId) {
-  const user = await UsersCollection.findById({ _id: userId });
+export async function getFavoriteRecipes(userId) {
+  const user = await UsersCollection.findById(userId);
 
-  const updatedUser = await UsersCollection.findByIdAndUpdate(
-    { _id: userId },
-    { favorites: [...user.favorites, recipeId] },
-    { new: true }
+  if (!user || !user.favorites.length) {
+    return [];
+  }
+
+  // Створення масиву валідних ObjectId
+  const favoriteIds = user.favorites
+    .filter((id) => mongoose.Types.ObjectId.isValid(id))
+    .map((id) => new mongoose.Types.ObjectId(id));
+
+  // Пошук рецептів за цими id
+  const recipes = await recipeModel.find({
+    _id: { $in: favoriteIds },
+  });
+
+  return recipes;
+}
+
+export async function addFavoriteRecipe(userId, recipeId) {
+  const user = await UsersCollection.findById(userId);
+  if (!user) throw createHttpError(404, 'User not found');
+
+  if (!mongoose.Types.ObjectId.isValid(recipeId)) {
+    throw createHttpError(400, 'Invalid recipe ID');
+  }
+
+  const isAlreadyFavorite = user.favorites.some(
+    (id) => id.toString() === recipeId.toString()
   );
-  return updatedUser;
+  if (isAlreadyFavorite) {
+    return user;
+  }
+
+  user.favorites.push(mongoose.Types.ObjectId.createFromHexString(recipeId));
+  return await user.save();
 }
 
 export async function deleteFavoriteRecipe(userId, recipeId) {

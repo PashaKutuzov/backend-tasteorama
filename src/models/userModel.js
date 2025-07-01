@@ -1,4 +1,4 @@
-import { model, Schema } from 'mongoose';
+import mongoose, { model, Schema } from 'mongoose';
 
 const usersSchema = new Schema(
   {
@@ -12,8 +12,7 @@ const usersSchema = new Schema(
 
     password: { type: String, required: true },
     privacyPolicyAcceptedAt: { type: Date, required: true },
-    favorites: { type: Array, required: false, default: [] },
-    // accessToken: { type: String, required: true },
+    favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }],
   },
   { timestamps: true, versionKey: false }
 );
