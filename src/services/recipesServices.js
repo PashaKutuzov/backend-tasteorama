@@ -99,12 +99,10 @@ export async function getFavoriteRecipes(userId) {
     return [];
   }
 
-  // Створення масиву валідних ObjectId
   const favoriteIds = user.favorites
     .filter((id) => mongoose.Types.ObjectId.isValid(id))
     .map((id) => new mongoose.Types.ObjectId(id));
 
-  // Пошук рецептів за цими id
   const recipes = await recipeModel.find({
     _id: { $in: favoriteIds },
   });
