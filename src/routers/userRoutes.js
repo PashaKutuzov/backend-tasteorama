@@ -7,5 +7,3 @@ const router = express.Router();
 
 router.get('/me', authenticate, ctrlWrapper(getCurrentUser));
 export default router;
-
-//

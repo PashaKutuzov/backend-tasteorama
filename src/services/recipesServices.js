@@ -1,7 +1,5 @@
-import mongoose from 'mongoose';
 import { recipeModel } from '../models/recipesModel.js';
 import { UsersCollection } from '../models/userModel.js';
-import createHttpError from 'http-errors';
 
 export async function getRecipes({
   page,
@@ -72,11 +70,7 @@ export async function getAllRecipes({
   };
 }
 
-// export function getRecipeById(recipeId) {
-//   return recipeModel.findById({ _id: recipeId });
-// }
-
-export function getUsersRecipeById(recipeId, userId) {
+export function getRecipeById(recipeId, userId) {
   return recipeModel.findById({ _id: recipeId, userId });
 }
 
@@ -92,41 +86,15 @@ export function deleteRecipesById(recipeId, userId) {
   return recipeModel.findOneAndDelete({ _id: recipeId, userId });
 }
 
-export async function getFavoriteRecipes(userId) {
-  const user = await UsersCollection.findById(userId);
-
-  if (!user || !user.favorites.length) {
-    return [];
-  }
-
-  const favoriteIds = user.favorites
-    .filter((id) => mongoose.Types.ObjectId.isValid(id))
-    .map((id) => new mongoose.Types.ObjectId(id));
-
-  const recipes = await recipeModel.find({
-    _id: { $in: favoriteIds },
-  });
-
-  return recipes;
-}
-
 export async function addFavoriteRecipe(userId, recipeId) {
-  const user = await UsersCollection.findById(userId);
-  if (!user) throw createHttpError(404, 'User not found');
+  const user = await UsersCollection.findById({ _id: userId });
 
-  if (!mongoose.Types.ObjectId.isValid(recipeId)) {
-    throw createHttpError(400, 'Invalid recipe ID');
-  }
-
-  const isAlreadyFavorite = user.favorites.some(
-    (id) => id.toString() === recipeId.toString()
+  const updatedUser = await UsersCollection.findByIdAndUpdate(
+    { _id: userId },
+    { favorites: [...user.favorites, recipeId] },
+    { new: true }
   );
-  if (isAlreadyFavorite) {
-    return user;
-  }
-
-  user.favorites.push(mongoose.Types.ObjectId.createFromHexString(recipeId));
-  return await user.save();
+  return updatedUser;
 }
 
 export async function deleteFavoriteRecipe(userId, recipeId) {

@@ -2,15 +2,13 @@ import express from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
-  // getRecipesByIdController,
-  getUsersRecipesByIdController,
+  getRecipesByIdController,
   getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
   addFavoriteRecipeController,
   deleteFavoriteRecipeController,
-  getFavoriteRecipeController,
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -20,25 +18,6 @@ import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/multer.js';
 const router = express.Router();
 const jsonParser = express.json();
-router.get(
-  '/recipes/favorite',
-  authenticate,
-  ctrlWrapper(getFavoriteRecipeController)
-);
-
-router.post(
-  '/recipes/favorite',
-  authenticate,
-  jsonParser,
-  ctrlWrapper(addFavoriteRecipeController)
-);
-
-router.delete(
-  '/recipes/favorite/:id',
-  authenticate,
-  isValidId,
-  ctrlWrapper(deleteFavoriteRecipeController)
-);
 
 router.get('/recipes', ctrlWrapper(getAllRecipesController));
 
@@ -47,8 +26,8 @@ router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
 router.get(
   '/recipes/:recipeId',
   authenticate,
-  // isValidId,
-  ctrlWrapper(getUsersRecipesByIdController)
+  isValidId,
+  ctrlWrapper(getRecipesByIdController)
 );
 
 router.post(
@@ -71,6 +50,20 @@ router.delete(
   authenticate,
   isValidId,
   ctrlWrapper(deleteRecipesByIdController)
+);
+
+router.post(
+  '/recipes/favorite',
+  authenticate,
+  jsonParser,
+  ctrlWrapper(addFavoriteRecipeController)
+);
+
+router.delete(
+  '/recipes/favorite/:id',
+  authenticate,
+  isValidId,
+  ctrlWrapper(deleteFavoriteRecipeController)
 );
 
 export default router;
