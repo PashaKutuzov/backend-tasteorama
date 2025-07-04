@@ -34,6 +34,8 @@ paths:
     get:
       $ref: '../swagger/paths/recipes/user/get.yaml'
   /recipes/favorite:
+    get:
+      $ref: '../swagger/paths/recipes/favorite/get.yaml'
     post:
       $ref: '../swagger/paths/recipes/favorite/post.yaml'
   /recipes/favorite/{id}:
@@ -45,6 +47,9 @@ paths:
   /ingredients:
     get:
       $ref: '../swagger/paths/ingredients/get.yaml'
+  /users:
+    get:
+      $ref: '../swagger/paths/users/get.yaml'
 
   /auth/register:
     post:
@@ -58,12 +63,12 @@ paths:
   /auth/logout:
     post:
       $ref: ../swagger/paths/auth/logout/post.yaml
-  /auth/reset-pwd:
-    post:
-      $ref: ../swagger/paths/auth/reset-pwd/post.yaml
-  /auth/send-reset-email:
-    post:
-      $ref: ../swagger/paths/auth/send-reset-email/post.yaml
+  # /auth/reset-pwd:
+  #   post:
+  #     $ref: ../swagger/paths/auth/reset-pwd/post.yaml
+  # /auth/send-reset-email:
+  #   post:
+  #     $ref: ../swagger/paths/auth/send-reset-email/post.yaml
 
 components:
   securitySchemes:
