@@ -8,11 +8,15 @@ export const searchRecipesController = async (req, res, next) => {
       category,
       ingredient = '',
       page = '1',
-      limit = '12',
+      limit = '10',
     } = req.query;
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    let pageNum = Number(page);
+    let limitNum = Number(limit);
+
+    if (isNaN(pageNum) || pageNum <= 0) pageNum = 1;
+    if (isNaN(limitNum) || limitNum <= 0) limitNum = 12;
+
     const skip = (pageNum - 1) * limitNum;
 
     const filter = {};
@@ -40,17 +44,22 @@ export const searchRecipesController = async (req, res, next) => {
       }
 
       const ingredientIds = matchedIngredients.map((i) => i._id);
-
       filter['ingredients.id'] = { $in: ingredientIds };
     }
 
     const recipes = await Recipe.find(filter).skip(skip).limit(limitNum);
+
+    const totalRecipes = await Recipe.countDocuments(filter);
+    const totalPages = Math.ceil(totalRecipes / limitNum);
 
     res.json({
       status: 'success',
       code: 200,
       data: {
         result: recipes,
+        totalRecipes,
+        totalPages,
+        currentPage: pageNum,
       },
     });
   } catch (error) {
