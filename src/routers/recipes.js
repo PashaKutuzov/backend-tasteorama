@@ -22,6 +22,9 @@ import { searchRecipesController } from '../controllers/searchRecipesController.
 import { upload } from '../middlewares/multer.js';
 const router = express.Router();
 const jsonParser = express.json();
+
+router.get('/search', ctrlWrapper(searchRecipesController));
+
 router.get(
   '/recipes/favorite',
   authenticate,
@@ -41,8 +44,6 @@ router.delete(
   isValidId,
   ctrlWrapper(deleteFavoriteRecipeController)
 );
-
-router.get('/search', searchRecipesController);
 
 router.get('/recipes', ctrlWrapper(getAllRecipesController));
 
