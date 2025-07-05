@@ -82,3 +82,29 @@ export const updateRecipeSchema = Joi.object({
     'Soup'
   ),
 });
+
+import mongoose from 'mongoose';
+
+const objectIdValidator = Joi.string().custom((value, helpers) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    return helpers.error('any.invalid');
+  }
+  return value;
+}, 'ObjectId validation');
+
+const ingredientSchema = Joi.object({
+  id: objectIdValidator.required(),
+  measure: Joi.string().required(),
+});
+
+export const recipeCreateSchema = Joi.object({
+  name: Joi.string().max(64).required(),
+  descr: Joi.string().max(200).required(),
+  cookTime: Joi.number().min(1).max(360).required(),
+  cals: Joi.number().min(1).max(10000).optional(),
+  category: objectIdValidator.required(),
+  ingredients: Joi.array().items(ingredientSchema).min(2).max(16).required(),
+  instruction: Joi.string().max(1200).required(),
+  recipeImg: Joi.any().optional(),
+  owner: objectIdValidator.optional(),
+});

@@ -18,6 +18,7 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { UsersCollection } from '../models/userModel.js';
 
 export async function getAllRecipesController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -108,7 +109,8 @@ export async function createrecipesController(req, res, next) {
     } else if (body.thumb) {
       recipeData.thumb = body.thumb;
     }
-    recipeData.userId = user._id;
+    // recipeData.userId = user._id;
+    recipeData.owner = user._id;
 
     const recipe = await createRecipes(recipeData);
 
@@ -169,12 +171,22 @@ export async function getFavoriteRecipeController(req, res, next) {
   try {
     const userId = req.user._id;
 
-    const recipes = await getFavoriteRecipes(userId);
+    // const recipes = await getFavoriteRecipes(userId);
+    // data: recipes,
+
+    const user = await UsersCollection.findById(userId).populate('favorites');
+
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'User not found',
+      });
+    }
 
     res.status(200).json({
       status: 200,
       message: 'Favorite recipes retrieved successfully',
-      data: recipes,
+      data: user.favorites,
     });
   } catch (error) {
     next(error);
@@ -187,11 +199,15 @@ export async function addFavoriteRecipeController(req, res, next) {
 
     const { recipeId } = req.body;
 
+    if (!recipeId) {
+      return res.status(400).json({ message: 'Recipe ID is required' });
+    }
+
     const user = await addFavoriteRecipe(userId, recipeId);
 
-    if (!user) {
-      throw createHttpError(404, 'Recipe not found or access denied');
-    }
+    // if (!user) {
+    //   throw createHttpError(404, 'Recipe not found or access denied');
+    // }
 
     res.status(201).json({ message: 'Recipe added to favorites', data: user });
   } catch (error) {
