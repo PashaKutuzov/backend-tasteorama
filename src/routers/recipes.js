@@ -2,13 +2,16 @@ import express from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
-  getRecipesByIdController,
+  // getRecipesByIdController,
+  // getUsersRecipesByIdController,
   getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
   addFavoriteRecipeController,
   deleteFavoriteRecipeController,
+  getFavoriteRecipeController,
+  getRecipesByIdController,
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -19,19 +22,43 @@ import { searchRecipesController } from '../controllers/searchRecipesController.
 import { upload } from '../middlewares/multer.js';
 const router = express.Router();
 const jsonParser = express.json();
+router.get(
+  '/recipes/favorite',
+  authenticate,
+  ctrlWrapper(getFavoriteRecipeController)
+);
+
+router.post(
+  '/recipes/favorite',
+  authenticate,
+  jsonParser,
+  ctrlWrapper(addFavoriteRecipeController)
+);
+
+router.delete(
+  '/recipes/favorite/:id',
+  authenticate,
+  isValidId,
+  ctrlWrapper(deleteFavoriteRecipeController)
+);
 
 router.get('/search', searchRecipesController);
 
 router.get('/recipes', ctrlWrapper(getAllRecipesController));
 
 router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
-
 router.get(
   '/recipes/:recipeId',
-  authenticate,
-  isValidId,
+
+  // isValidId,
   ctrlWrapper(getRecipesByIdController)
 );
+// router.get(
+//   '/recipes/:recipeId',
+//   authenticate,
+//   // isValidId,
+//   ctrlWrapper(getUsersRecipesByIdController)
+// );
 
 router.post(
   '/recipes',
@@ -53,20 +80,6 @@ router.delete(
   authenticate,
   isValidId,
   ctrlWrapper(deleteRecipesByIdController)
-);
-
-router.post(
-  '/recipes/favorite',
-  authenticate,
-  jsonParser,
-  ctrlWrapper(addFavoriteRecipeController)
-);
-
-router.delete(
-  '/recipes/favorite/:id',
-  authenticate,
-  isValidId,
-  ctrlWrapper(deleteFavoriteRecipeController)
 );
 
 export default router;

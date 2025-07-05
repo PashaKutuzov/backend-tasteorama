@@ -50,6 +50,7 @@ export default async function setupServer() {
       },
     })
   );
+
   app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api/auth', authRouter);
   app.use('/api/users', userRoutes);

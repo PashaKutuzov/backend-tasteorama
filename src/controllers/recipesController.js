@@ -2,12 +2,15 @@ import createHttpError from 'http-errors';
 import {
   createRecipes,
   getAllRecipes,
+  // getUsersRecipeById,
   getRecipes,
-  getRecipeById,
+  // getRecipeById,
   deleteRecipesById,
   patchRecipes,
   addFavoriteRecipe,
   deleteFavoriteRecipe,
+  getFavoriteRecipes,
+  getRecipeById,
 } from '../services/recipesServices.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
@@ -33,6 +36,23 @@ export async function getAllRecipesController(req, res) {
     data: recipes,
   });
 }
+export async function getRecipesByIdController(req, res) {
+  const { recipeId } = req.params;
+
+  const recipe = await getRecipeById(recipeId);
+
+  if (recipe === null) {
+    throw createHttpError(404, 'Not found');
+  }
+  // if (recipe.userId.toString() !== userId.toString()) {
+  //   throw new createHttpError.Forbidden('Access denied for recipes');
+  // }
+  res.json({
+    status: 200,
+    message: `Successfully found recipe with id ${recipeId}!`,
+    data: recipe,
+  });
+}
 
 export async function getRecipesController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -55,23 +75,23 @@ export async function getRecipesController(req, res) {
   });
 }
 
-export async function getRecipesByIdController(req, res) {
-  const { recipeId } = req.params;
-  const userId = req.user._id;
-  const recipe = await getRecipeById(recipeId, userId);
+// export async function getUsersRecipesByIdController(req, res) {
+//   const { recipeId } = req.params;
+//   const userId = req.user._id;
+//   const recipe = await getUsersRecipeById(recipeId, userId);
 
-  if (recipe === null) {
-    throw createHttpError(404, 'Not found');
-  }
-  // if (recipe.userId.toString() !== userId.toString()) {
-  //   throw new createHttpError.Forbidden('Access denied for recipes');
-  // }
-  res.json({
-    status: 200,
-    message: `Successfully found recipe with id ${recipeId}!`,
-    data: recipe,
-  });
-}
+//   if (recipe === null) {
+//     throw createHttpError(404, 'Not found');
+//   }
+//   // if (recipe.userId.toString() !== userId.toString()) {
+//   //   throw new createHttpError.Forbidden('Access denied for recipes');
+//   // }
+//   res.json({
+//     status: 200,
+//     message: `Successfully found recipe with id ${recipeId}!`,
+//     data: recipe,
+//   });
+// }
 
 export async function createrecipesController(req, res, next) {
   try {
@@ -126,6 +146,22 @@ export async function deleteRecipesByIdController(req, res) {
     throw createHttpError(404, 'Not found');
   }
   res.status(204).end();
+}
+
+export async function getFavoriteRecipeController(req, res, next) {
+  try {
+    const userId = req.user._id;
+
+    const recipes = await getFavoriteRecipes(userId);
+
+    res.status(200).json({
+      status: 200,
+      message: 'Favorite recipes retrieved successfully',
+      data: recipes,
+    });
+  } catch (error) {
+    next(error);
+  }
 }
 
 export async function addFavoriteRecipeController(req, res, next) {
