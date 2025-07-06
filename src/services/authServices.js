@@ -13,14 +13,26 @@ export const registerUser = async (payload) => {
   }
 
   const hashedPassword = await bcrypt.hash(payload.password, 10);
+  const accessToken = generateToken();
+  const refreshToken = generateToken();
 
-  return UsersCollection.create({
+  const newUser = await UsersCollection.create({
     ...payload,
     password: hashedPassword,
     privacyPolicyAcceptedAt: new Date(),
+    accessToken,
   });
-};
 
+  await createSession(newUser._id, accessToken, refreshToken);
+
+  return {
+    user: newUser,
+    // session: {
+    //   accessToken,
+    //   refreshToken,
+    // },
+  };
+};
 export const loginUser = async ({ email, password }) => {
   const user = await UsersCollection.findOne({ email });
 
