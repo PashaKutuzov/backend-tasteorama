@@ -12,10 +12,7 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  - url: https://backend-tasteorama.onrender.com
-    description: Production server
-  - url: http://127.0.0.1:8080
-    description: Local development server
+  - url: http://localhost:3000
 
 paths:
   /recipes/{id}:
@@ -30,6 +27,7 @@ paths:
       $ref: '../swagger/paths/recipes/get.yaml'
     post:
       $ref: '../swagger/paths/recipes/post.yaml'
+
   /recipes/user:
     get:
       $ref: '../swagger/paths/recipes/user/get.yaml'
@@ -69,6 +67,7 @@ paths:
   # /auth/send-reset-email:
   #   post:
   #     $ref: ../swagger/paths/auth/send-reset-email/post.yaml
+
 
 components:
   securitySchemes:

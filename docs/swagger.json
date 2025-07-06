@@ -11,12 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://backend-tasteorama.onrender.com",
-      "description": "Production server"
-    },
-    {
-      "url": "http://127.0.0.1:8080",
-      "description": "Local development server"
+      "url": "http://localhost:3000"
     }
   ],
   "tags": [
@@ -685,120 +680,137 @@
           }
         }
       }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
     },
-    "/recipes/user": {
-      "get": {
-        "tags": [
-          "Recipes"
+    "schemas": {
+      "recipe": {
+        "type": "object",
+        "required": [
+          "userId",
+          "title",
+          "category",
+          "instructions",
+          "description",
+          "timestamps",
+          "ingredients"
         ],
-        "summary": "Get list of user's recipes",
-        "operationId": "getUserRecipes",
-        "description": "Get list of recipes created by the authenticated user",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "example": 1
-            }
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "Recipe ID",
+            "example": "68419ace9cd45e2f9773af01"
           },
-          {
-            "in": "query",
-            "name": "perPage",
-            "schema": {
-              "type": "integer",
-              "example": 10
-            }
+          "title": {
+            "type": "string",
+            "description": "The full name of the recipe",
+            "example": "BreakFest"
           },
-          {
-            "in": "query",
-            "name": "sortBy",
-            "schema": {
-              "type": "string",
-              "example": "_id"
-            },
-            "description": "All recipe fields can be used. Default is `_id`."
+          "category": {
+            "type": "string",
+            "description": "The full name of the category",
+            "enum": [
+              "Seafood",
+              "Lamb",
+              "Starter",
+              "Chicken",
+              "Beef",
+              "Dessert",
+              "Vegan",
+              "Pork",
+              "Vegetarian",
+              "Miscellaneous",
+              "Pasta",
+              "Breakfast",
+              "Side",
+              "Goat",
+              "Soup"
+            ],
+            "example": "Chicken"
           },
-          {
-            "in": "query",
-            "name": "sortOrder",
-            "schema": {
+          "ingredients": {
+            "type": "array",
+            "description": "List of recipe ingredients",
+            "items": {
               "type": "string",
               "enum": [
-                "asc",
-                "desc"
-              ],
-              "example": "asc"
-            }
-          },
-          {
-            "in": "query",
-            "name": "category",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "Seafood",
-                "Lamb",
-                "Starter",
-                "Chicken",
-                "Beef",
-                "Dessert",
-                "Vegan",
+                "Squid",
+                "Cabbage",
+                "Baking Powder",
+                "Smoked Haddock",
+                "Pears",
+                "Spring Onions",
+                "Ginger Cordial",
+                "Almond Extract",
+                "Tinned Tomatos",
+                "Minced Beef",
+                "Gruyère",
+                "Powdered Sugar",
+                "Stilton Cheese",
                 "Pork",
-                "Vegetarian",
-                "Miscellaneous",
-                "Pasta",
-                "Breakfast",
-                "Side",
-                "Goat",
-                "Soup"
-              ],
-              "example": "Breakfast"
+                "Sake",
+                "Cayenne Pepper",
+                "Jalapeno",
+                "Barbeque Sauce",
+                "Scotch Bonnet",
+                "Haddock"
+              ]
             },
-            "description": "Filter recipes by category."
+            "example": [
+              "Pork",
+              "Tinned Tomatos"
+            ]
           },
-          {
-            "in": "query",
-            "name": "title",
-            "schema": {
-              "type": "string",
-              "example": "BreakFest"
-            },
-            "description": "Filter recipes by title."
+          "description": {
+            "type": "string",
+            "description": "The full name of the description",
+            "example": "A tasty chicken dish."
           },
-          {
-            "in": "query",
-            "name": "ingredients",
-            "schema": {
-              "type": "string",
-              "example": "Pork"
-            },
-            "description": "Filter recipes by ingredient (single value or comma-separated list)."
+          "instructions": {
+            "type": "string",
+            "description": "The full name of the preparation steps",
+            "example": "Cut and fry the chicken"
           },
-          {
-            "in": "query",
-            "name": "description",
-            "schema": {
-              "type": "string",
-              "example": "A tasty chicken dish."
-            },
-            "description": "Filter recipes by description."
+          "timestamps": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Recipe last updated date",
+            "example": "2025-06-05T13:25:34.340+00:00"
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully found user's recipes!",
-            "content": {
-              "application/json": {
-                "schema": {
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
                   "type": "object",
                   "required": [
+
                     "status",
                     "message",
                     "data"
@@ -1929,116 +1941,13 @@
                 "data": {
                   "type": "object",
                   "required": [
+
                     "message"
                   ],
                   "properties": {
                     "message": {
                       "type": "string",
                       "example": "Access token expired"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - Session or Authorization header not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 404,
-                  "description": "HTTP status code"
-                },
-                "message": {
-                  "type": "string",
-                  "example": "NotFoundError",
-                  "description": "Error message indicating that the resource was not found"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Session not found",
-                      "description": "Detailed message about the missing session or header"
-                    }
-                  },
-                  "additionalProperties": false
-                }
-              }
-            },
-            "examples": {
-              "no_token": {
-                "summary": "Session not found",
-                "value": {
-                  "status": 404,
-                  "message": "NotFoundError",
-                  "data": {
-                    "message": "Session not found"
-                  }
-                }
-              },
-              "token_expired": {
-                "summary": "Authorization header not found",
-                "value": {
-                  "status": 404,
-                  "message": "NotFoundError",
-                  "data": {
-                    "message": "Authorization header not found"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "409": {
-        "description": "**Conflict Error (409)**\n\nThis error occurs when there is a conflict with the current state of the resource.\n- In this case, the conflict arises because the `email` provided is already in use by another account.\n",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "description": "HTTP status code indicating the error type.",
-                  "example": 409
-                },
-                "message": {
-                  "type": "string",
-                  "description": "A brief summary of the conflict error.",
-                  "example": "ConflictError"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message",
-                    "errors"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "description": "Specific details about the error, such as the conflicting field.",
-                      "example": "Email already in use"
                     }
                   }
                 }

@@ -11,3 +11,5 @@ const storage = multer.diskStorage({
 });
 
 export const upload = multer({ storage });
+
+export const uploadRecipeImg = upload.single('recipeImg');
