@@ -1,0 +1,64 @@
+tags:
+  - Recipes
+summary: Get all recipe ingredients
+operationId: getAllRecipeIngredients
+description: Get a list of all available recipe ingredients
+security:
+  - bearerAuth: []
+
+responses:
+  '200':
+    description: Successfully retrieved recipe ingredients
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Ingredients found successfully
+            data:
+              type: array
+              items:
+                type: object
+                required:
+                  - _id
+                  - name
+                  - desc
+                  - img
+                properties:
+                  _id:
+                    type: string
+                    example: '640c2dd963a319ea671e37f5'
+                  name:
+                    type: string
+                    example: 'Egg'
+                  desc:
+                    type: string
+                    example: >-
+                      A leafy green or purple vegetable that is often used in salads, coleslaw, and stir-fry dishes, and is also commonly fermented into sauerkraut.
+                  img:
+                    type: string
+                    example: 'https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37f5.png'
+              example:
+                - _id: '640c2dd963a319ea671e37f5'
+                  name: 'Egg'
+                  desc: 'A leafy green or purple vegetable that is often used in salads, coleslaw, and stir-fry dishes, and is also commonly fermented into sauerkraut.'
+                  img: 'https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37f5.png'
+                - _id: '640c2dd963a319ea671e37f6'
+                  name: 'Pork'
+                  desc: 'Tender and juicy meat from a pig, commonly used in various savory dishes.'
+                  img: 'https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37f6.png'
+
+  '401':
+    $ref: '../../components/responses/401.yaml'
+
+  '500':
+    $ref: '../../components/responses/500.yaml'

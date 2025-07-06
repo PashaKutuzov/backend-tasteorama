@@ -1,4 +1,3 @@
-# swagger/paths/studens/{id}/get.yaml
 tags:
   - Recipes
 summary: Get recipe by id

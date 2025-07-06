@@ -2,7 +2,7 @@ tags:
   - Recipes
 summary: Update recipe
 operationId: updateRecipe
-description: Update recipe
+description: Update recipe by ID
 security:
   - bearerAuth: []
 parameters:
@@ -13,6 +13,7 @@ parameters:
       type: string
       example: '681b6a51254a7a7996d15746'
     description: The unique identifier of the recipe to be updated.
+
 requestBody:
   required: true
   content:
@@ -20,21 +21,17 @@ requestBody:
       schema:
         type: object
         required:
-          - _id
           - title
           - category
-          - description
           - instructions
-          - timestamps
+          - description
+          - ingredients
         properties:
-          _id:
-            type: string
-            description: Recipe ID
-            example: '68419ace9cd45e2f9773af01'
           title:
             type: string
             description: The full name of the recipe
-            example: 'BreakFest'
+            example: 'Breakfast Omelette'
+
           category:
             type: string
             description: The full name of the category
@@ -54,23 +51,60 @@ requestBody:
               - Side
               - Goat
               - Soup
-            example: 'Chicken'
-          description:
+            example: 'Breakfast'
+
+          area:
             type: string
-            description: The full name of the description
-            example: 'Chicken'
+            description: The cuisine area (e.g. Italian, Mexican)
+            example: 'Italian'
+
           instructions:
             type: string
-            description: The full name of the preparation steps
-            example: 'Cut and fry the chicken'
-          timestamps:
+            description: Preparation steps
+            example: 'Crack the eggs and beat with a fork...'
+
+          description:
             type: string
-            format: date-time
-            description: Recipe last updated date
-            example: '2025-06-05T13:25:34.340+00:00'
+            description: Short description of the recipe
+            example: 'A light and fluffy omelette perfect for breakfast.'
+
+          thumb:
+            type: string
+            format: binary
+            description: Optional recipe image file
+
+          time:
+            type: string
+            description: Time needed to prepare the recipe
+            example: '30 min'
+
+          cals:
+            type: number
+            description: Calories per portion
+            example: 250
+
+          ingredients:
+            type: array
+            description: List of ingredients with their measures
+            minItems: 1
+            items:
+              type: object
+              required:
+                - id
+                - measure
+              properties:
+                id:
+                  type: string
+                  description: Ingredient ID (MongoDB ObjectId)
+                  example: '64a1b2c3e25d8c90e88d5678'
+                measure:
+                  type: string
+                  description: Quantity and unit of the ingredient
+                  example: '2 tbsp'
+
 responses:
   '200':
-    description: Successfully updated a recipe
+    description: Successfully updated recipe
     content:
       application/json:
         schema:
@@ -88,7 +122,26 @@ responses:
               example: Successfully patched a recipe!
             data:
               $ref: '../../../components/schemas/recipe.yaml'
+
   '401':
     $ref: '../../../components/responses/401.yaml'
+
+  '404':
+    description: Recipe not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Recipe not found
+
   '500':
     $ref: '../../../components/responses/500.yaml'

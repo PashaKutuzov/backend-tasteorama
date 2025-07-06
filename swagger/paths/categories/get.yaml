@@ -1,0 +1,53 @@
+tags:
+  - Recipes
+summary: Get all recipe categories
+operationId: getAllRecipeCategories
+description: Get a list of all available recipe categories
+security:
+  - bearerAuth: []
+
+responses:
+  '200':
+    description: Successfully retrieved recipe categories
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully retrieved recipe categories
+            data:
+              type: array
+              items:
+                type: object
+                required:
+                  - _id
+                  - name
+                properties:
+                  _id:
+                    type: string
+                    example: '6462a6cd4c3d0ddd28897f8e'
+                  name:
+                    type: string
+                    example: 'Beef'
+              example:
+                - _id: '6462a6cd4c3d0ddd28897f8e'
+                  name: 'Beef'
+                - _id: '6462a6cd4c3d0ddd28897f8f'
+                  name: 'Chicken'
+                - _id: '6462a6cd4c3d0ddd28897f90'
+                  name: 'Vegan'
+
+  '401':
+    $ref: '../../components/responses/401.yaml'
+
+  '500':
+    $ref: '../../components/responses/500.yaml'
