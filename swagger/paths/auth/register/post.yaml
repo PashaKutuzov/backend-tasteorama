@@ -1,0 +1,63 @@
+tags:
+  - Auth
+summary: User Registration
+operationId: registerUser
+description: |
+  **User Registration**
+
+  This endpoint allows new users to register an account by providing essential information.
+
+  ### Required Fields
+  - **Name**: The full name of the user.
+  - **Email**: A valid email address that will be used for login and communication.
+  - **Password**: A secure password for the user's account.
+  - **Privacy Policy Accepted At**: ISO 8601 date-time string indicating when the user accepted the privacy policy.
+
+  ### Optional Fields
+  - There are no optional fields for this endpoint. All fields are required.
+
+  ### How to Use
+  - **Name**: Enter the user's full name.
+  - **Email**: Provide a unique email address for the user.
+  - **Password**: Choose a strong password for the user’s account.
+  - **Privacy Policy Accepted At**: Provide the date/time the user accepted the privacy policy.
+
+  After successful registration, the user will receive a confirmation response with details of the newly created account.
+
+  ### Security
+  - This endpoint does not require authentication. You can access this endpoint directly to register a new user.
+security: []
+requestBody:
+  content:
+    application/x-www-form-urlencoded:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+          - privacyPolicyAcceptedAt
+        properties:
+          name:
+            type: string
+            description: "The user's full name."
+            example: 'User One'
+          email:
+            type: string
+            description: "The user's email address."
+            example: 'userone@example.com'
+          password:
+            type: string
+            description: "The user's password."
+            example: '123Qwe!xX'
+          privacyPolicyAcceptedAt:
+            type: string
+            format: date-time
+            description: 'ISO 8601 timestamp when user accepted the privacy policy.'
+            example: '2025-06-28T12:00:00.000Z'
+
+responses:
+  '201':
+    $ref: '../../../components/responses/201.yaml'
+  '409':
+    $ref: '../../../components/responses/409.yaml'

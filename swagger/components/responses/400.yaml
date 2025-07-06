@@ -1,0 +1,62 @@
+description: |
+  The request is invalid due to incorrect or missing parameters.
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: 'BadRequestError'
+        data:
+          type: object
+          required:
+            - message
+            - errors
+          properties:
+            message:
+              type: string
+              example: 'Bad request'
+            errors:
+              type: array
+              description: |
+                A list of validation errors encountered.
+              items:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: |
+                      A description of the validation error.
+                    example: '"email" is required'
+                  path:
+                    type: array
+                    description: |
+                      The path of the field that caused the validation error.
+                    items:
+                      type: string
+                    example: 
+                      - email
+                  type:
+                    type: string
+                    description: |
+                      The type of the validation error.
+                    example: 'any.required'
+                  context:
+                    type: object
+                    description: |
+                      Additional context provided by Joi.
+                    properties:
+                      label:
+                        type: string
+                        example: 'email'
+                      key:
+                        type: string
+                        example: 'email'
