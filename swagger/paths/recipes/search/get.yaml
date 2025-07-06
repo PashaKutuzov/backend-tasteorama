@@ -1,0 +1,112 @@
+tags:
+  - Recipes
+summary: Search recipes
+operationId: searchRecipes
+description: Search recipes by title, category, or ingredient with pagination support
+security: []
+parameters:
+  - in: query
+    name: title
+    schema:
+      type: string
+      example: Cake
+    description: Partial match in recipe title
+
+  - in: query
+    name: category
+    schema:
+      type: string
+      enum:
+        - Seafood
+        - Lamb
+        - Starter
+        - Chicken
+        - Beef
+        - Dessert
+        - Vegan
+        - Pork
+        - Vegetarian
+        - Miscellaneous
+        - Pasta
+        - Breakfast
+        - Side
+        - Goat
+        - Soup
+      example: Dessert
+    description: Exact category match
+
+  - in: query
+    name: ingredient
+    schema:
+      type: string
+      example: Egg
+    description: Ingredient name to match (partial match allowed)
+
+  - in: query
+    name: page
+    schema:
+      type: integer
+      example: 1
+    description: Page number (default is 1)
+
+  - in: query
+    name: limit
+    schema:
+      type: integer
+      example: 10
+    description: Number of results per page (default is 10)
+
+responses:
+  '200':
+    description: Recipes found successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Recipes retrieved successfully
+            data:
+              type: object
+              required:
+                - recipes
+                - page
+                - perPage
+                - totalItems
+                - totalPages
+                - hasNextPage
+                - hasPreviousPage
+              properties:
+                recipes:
+                  type: array
+                  items:
+                    $ref: '../../../components/schemas/recipe.yaml'
+                page:
+                  type: integer
+                  example: 1
+                perPage:
+                  type: integer
+                  example: 10
+                totalItems:
+                  type: integer
+                  example: 40
+                totalPages:
+                  type: integer
+                  example: 4
+                hasNextPage:
+                  type: boolean
+                  example: true
+                hasPreviousPage:
+                  type: boolean
+                  example: false
+
+  '500':
+    $ref: '../../../components/responses/500.yaml'

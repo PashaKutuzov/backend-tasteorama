@@ -30,6 +30,155 @@
     }
   ],
   "paths": {
+    "/recipes/search": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Search recipes",
+        "operationId": "searchRecipes",
+        "description": "Search recipes by title, category, or ingredient with pagination support",
+        "security": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string",
+              "example": "Cake"
+            },
+            "description": "Partial match in recipe title"
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Seafood",
+                "Lamb",
+                "Starter",
+                "Chicken",
+                "Beef",
+                "Dessert",
+                "Vegan",
+                "Pork",
+                "Vegetarian",
+                "Miscellaneous",
+                "Pasta",
+                "Breakfast",
+                "Side",
+                "Goat",
+                "Soup"
+              ],
+              "example": "Dessert"
+            },
+            "description": "Exact category match"
+          },
+          {
+            "in": "query",
+            "name": "ingredient",
+            "schema": {
+              "type": "string",
+              "example": "Egg"
+            },
+            "description": "Ingredient name to match (partial match allowed)"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            },
+            "description": "Page number (default is 1)"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            },
+            "description": "Number of results per page (default is 10)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recipes found successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recipes retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "recipes",
+                        "page",
+                        "perPage",
+                        "totalItems",
+                        "totalPages",
+                        "hasNextPage",
+                        "hasPreviousPage"
+                      ],
+                      "properties": {
+                        "recipes": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/recipe"
+                          }
+                        },
+                        "page": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "perPage": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "totalItems": {
+                          "type": "integer",
+                          "example": 40
+                        },
+                        "totalPages": {
+                          "type": "integer",
+                          "example": 4
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "hasPreviousPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
     "/recipes/{id}": {
       "get": {
         "tags": [
@@ -122,7 +271,7 @@
         ],
         "summary": "Update recipe",
         "operationId": "updateRecipe",
-        "description": "Update recipe",
+        "description": "Update recipe by ID",
         "security": [
           {
             "bearerAuth": []
@@ -147,23 +296,17 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "_id",
                   "title",
                   "category",
-                  "description",
                   "instructions",
-                  "timestamps"
+                  "description",
+                  "ingredients"
                 ],
                 "properties": {
-                  "_id": {
-                    "type": "string",
-                    "description": "Recipe ID",
-                    "example": "68419ace9cd45e2f9773af01"
-                  },
                   "title": {
                     "type": "string",
                     "description": "The full name of the recipe",
-                    "example": "BreakFest"
+                    "example": "Breakfast Omelette"
                   },
                   "category": {
                     "type": "string",
@@ -185,23 +328,61 @@
                       "Goat",
                       "Soup"
                     ],
-                    "example": "Chicken"
+                    "example": "Breakfast"
                   },
-                  "description": {
+                  "area": {
                     "type": "string",
-                    "description": "The full name of the description",
-                    "example": "Chicken"
+                    "description": "The cuisine area (e.g. Italian, Mexican)",
+                    "example": "Italian"
                   },
                   "instructions": {
                     "type": "string",
-                    "description": "The full name of the preparation steps",
-                    "example": "Cut and fry the chicken"
+                    "description": "Preparation steps",
+                    "example": "Crack the eggs and beat with a fork..."
                   },
-                  "timestamps": {
+                  "description": {
                     "type": "string",
-                    "format": "date-time",
-                    "description": "Recipe last updated date",
-                    "example": "2025-06-05T13:25:34.340+00:00"
+                    "description": "Short description of the recipe",
+                    "example": "A light and fluffy omelette perfect for breakfast."
+                  },
+                  "thumb": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Optional recipe image file"
+                  },
+                  "time": {
+                    "type": "string",
+                    "description": "Time needed to prepare the recipe",
+                    "example": "30 min"
+                  },
+                  "cals": {
+                    "type": "number",
+                    "description": "Calories per portion",
+                    "example": 250
+                  },
+                  "ingredients": {
+                    "type": "array",
+                    "description": "List of ingredients with their measures",
+                    "minItems": 1,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "measure"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Ingredient ID (MongoDB ObjectId)",
+                          "example": "64a1b2c3e25d8c90e88d5678"
+                        },
+                        "measure": {
+                          "type": "string",
+                          "description": "Quantity and unit of the ingredient",
+                          "example": "2 tbsp"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -210,7 +391,7 @@
         },
         "responses": {
           "200": {
-            "description": "Successfully updated a recipe",
+            "description": "Successfully updated recipe",
             "content": {
               "application/json": {
                 "schema": {
@@ -239,6 +420,30 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Recipe not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recipe not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -540,7 +745,7 @@
         ],
         "summary": "Create recipe",
         "operationId": "createRecipe",
-        "description": "Create Recipe",
+        "description": "Create a new recipe",
         "security": [
           {
             "bearerAuth": []
@@ -553,28 +758,21 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "userId",
                   "title",
                   "category",
                   "instructions",
                   "description",
-                  "timestamps",
-                  "ingredients"
+                  "time"
                 ],
                 "properties": {
-                  "userId": {
-                    "type": "string",
-                    "description": "Recipe ID",
-                    "example": "68419ace9cd45e2f9773af01"
-                  },
                   "title": {
                     "type": "string",
-                    "description": "The full name of the recipe",
-                    "example": "BreakFest"
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "example": "Chocolate Cake"
                   },
                   "category": {
                     "type": "string",
-                    "description": "The full name of the category",
                     "enum": [
                       "Seafood",
                       "Lamb",
@@ -592,56 +790,47 @@
                       "Goat",
                       "Soup"
                     ],
-                    "example": "Chicken"
+                    "example": "Dessert"
                   },
-                  "ingredients": {
-                    "type": "array",
-                    "description": "List of recipe ingredients",
-                    "items": {
-                      "type": "string",
-                      "enum": [
-                        "Squid",
-                        "Cabbage",
-                        "Baking Powder",
-                        "Smoked Haddock",
-                        "Pears",
-                        "Spring Onions",
-                        "Ginger Cordial",
-                        "Almond Extract",
-                        "Tinned Tomatos",
-                        "Minced Beef",
-                        "Gruyère",
-                        "Powdered Sugar",
-                        "Stilton Cheese",
-                        "Pork",
-                        "Sake",
-                        "Cayenne Pepper",
-                        "Jalapeno",
-                        "Barbeque Sauce",
-                        "Scotch Bonnet",
-                        "Haddock"
-                      ]
-                    },
-                    "example": [
-                      "Pork",
-                      "Tinned Tomatos"
-                    ]
+                  "area": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "example": "Italian"
                   },
                   "description": {
                     "type": "string",
-                    "description": "The full name of the description",
-                    "example": "A tasty chicken dish."
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "example": "A rich chocolate cake with cream"
+                  },
+                  "time": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 360,
+                    "example": "45 min"
+                  },
+                  "cals": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000,
+                    "example": 350
                   },
                   "instructions": {
                     "type": "string",
-                    "description": "The full name of the preparation steps",
-                    "example": "Cut and fry the chicken"
+                    "minLength": 1,
+                    "maxLength": 1200,
+                    "example": "Mix everything and bake at 180°C for 40 min"
                   },
-                  "timestamps": {
+                  "thumb": {
                     "type": "string",
-                    "format": "date-time",
-                    "description": "Recipe creation timestamp",
-                    "example": "2025-06-05T13:25:34.340+00:00"
+                    "format": "binary",
+                    "description": "Image file upload (optional)"
+                  },
+                  "owner": {
+                    "type": "string",
+                    "description": "ID of the user (optional)",
+                    "example": "685e469e90ec1af79417e1e0"
                   }
                 }
               }
@@ -650,7 +839,7 @@
         },
         "responses": {
           "201": {
-            "description": "Creates a recipe",
+            "description": "Successfully created a recipe",
             "content": {
               "application/json": {
                 "schema": {
@@ -671,6 +860,38 @@
                     },
                     "data": {
                       "$ref": "#/components/schemas/recipe"
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "summary": "Recipe created",
+                    "value": {
+                      "status": 201,
+                      "message": "Successfully created a recipe!",
+                      "data": {
+                        "title": "Cake",
+                        "category": "Dessert",
+                        "instructions": "Follow steps...",
+                        "description": "Some description",
+                        "thumb": "https://res.cloudinary.com/drxvkqgab/image/upload/v1751815133/azuzlwauesqx75yu7zog.jpg",
+                        "time": "60",
+                        "cals": 300,
+                        "ingredients": [
+                          {
+                            "id": "640c2dd963a319ea671e367e",
+                            "measure": "300g"
+                          },
+                          {
+                            "id": "640c2dd963a319ea671e3687",
+                            "measure": "2 pcs"
+                          }
+                        ],
+                        "owner": "685e469e90ec1af79417e1e0",
+                        "_id": "686a93dd70a76a8fd13cc748",
+                        "createdAt": "2025-07-06T15:18:53.977Z",
+                        "updatedAt": "2025-07-06T15:18:53.977Z"
+                      }
                     }
                   }
                 }
@@ -1310,29 +1531,35 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "type": "string",
-                        "enum": [
-                          "Seafood",
-                          "Lamb",
-                          "Starter",
-                          "Chicken",
-                          "Beef",
-                          "Dessert",
-                          "Vegan",
-                          "Pork",
-                          "Vegetarian",
-                          "Miscellaneous",
-                          "Pasta",
-                          "Breakfast",
-                          "Side",
-                          "Goat",
-                          "Soup"
-                        ]
+                        "type": "object",
+                        "required": [
+                          "_id",
+                          "name"
+                        ],
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "6462a6cd4c3d0ddd28897f8e"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Beef"
+                          }
+                        }
                       },
                       "example": [
-                        "Chicken",
-                        "Vegan",
-                        "Dessert"
+                        {
+                          "_id": "6462a6cd4c3d0ddd28897f8e",
+                          "name": "Beef"
+                        },
+                        {
+                          "_id": "6462a6cd4c3d0ddd28897f8f",
+                          "name": "Chicken"
+                        },
+                        {
+                          "_id": "6462a6cd4c3d0ddd28897f90",
+                          "name": "Vegan"
+                        }
                       ]
                     }
                   }
@@ -1381,39 +1608,50 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully retrieved recipe ingredients"
+                      "example": "Ingredients found successfully"
                     },
                     "data": {
                       "type": "array",
                       "items": {
-                        "type": "string",
-                        "enum": [
-                          "Squid",
-                          "Cabbage",
-                          "Baking Powder",
-                          "Smoked Haddock",
-                          "Pears",
-                          "Spring Onions",
-                          "Ginger Cordial",
-                          "Almond Extract",
-                          "Tinned Tomatos",
-                          "Minced Beef",
-                          "Gruyère",
-                          "Powdered Sugar",
-                          "Stilton Cheese",
-                          "Pork",
-                          "Sake",
-                          "Cayenne Pepper",
-                          "Jalapeno",
-                          "Barbeque Sauce",
-                          "Scotch Bonnet",
-                          "Haddock"
-                        ]
+                        "type": "object",
+                        "required": [
+                          "_id",
+                          "name",
+                          "desc",
+                          "img"
+                        ],
+                        "properties": {
+                          "_id": {
+                            "type": "string",
+                            "example": "640c2dd963a319ea671e37f5"
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "Egg"
+                          },
+                          "desc": {
+                            "type": "string",
+                            "example": "A leafy green or purple vegetable that is often used in salads, coleslaw, and stir-fry dishes, and is also commonly fermented into sauerkraut."
+                          },
+                          "img": {
+                            "type": "string",
+                            "example": "https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37f5.png"
+                          }
+                        }
                       },
                       "example": [
-                        "Pork",
-                        "Tinned Tomatos",
-                        "Cayenne Pepper"
+                        {
+                          "_id": "640c2dd963a319ea671e37f5",
+                          "name": "Egg",
+                          "desc": "A leafy green or purple vegetable that is often used in salads, coleslaw, and stir-fry dishes, and is also commonly fermented into sauerkraut.",
+                          "img": "https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37f5.png"
+                        },
+                        {
+                          "_id": "640c2dd963a319ea671e37f6",
+                          "name": "Pork",
+                          "desc": "Tender and juicy meat from a pig, commonly used in various savory dishes.",
+                          "img": "https://ftp.goit.study/img/so-yummy/ingredients/640c2dd963a319ea671e37f6.png"
+                        }
                       ]
                     }
                   }
@@ -1715,24 +1953,22 @@
       "recipe": {
         "type": "object",
         "required": [
-          "userId",
           "title",
           "category",
           "instructions",
           "description",
-          "timestamps",
           "ingredients"
         ],
         "properties": {
-          "userId": {
+          "_id": {
             "type": "string",
-            "description": "Recipe ID",
-            "example": "68419ace9cd45e2f9773af01"
+            "description": "Unique recipe ID",
+            "example": "64a1b2c3e25d8c90e88d5678"
           },
           "title": {
             "type": "string",
             "description": "The full name of the recipe",
-            "example": "BreakFest"
+            "example": "Breakfast Omelette"
           },
           "category": {
             "type": "string",
@@ -1754,56 +1990,78 @@
               "Goat",
               "Soup"
             ],
-            "example": "Chicken"
+            "example": "Breakfast"
           },
-          "ingredients": {
-            "type": "array",
-            "description": "List of recipe ingredients",
-            "items": {
-              "type": "string",
-              "enum": [
-                "Squid",
-                "Cabbage",
-                "Baking Powder",
-                "Smoked Haddock",
-                "Pears",
-                "Spring Onions",
-                "Ginger Cordial",
-                "Almond Extract",
-                "Tinned Tomatos",
-                "Minced Beef",
-                "Gruyère",
-                "Powdered Sugar",
-                "Stilton Cheese",
-                "Pork",
-                "Sake",
-                "Cayenne Pepper",
-                "Jalapeno",
-                "Barbeque Sauce",
-                "Scotch Bonnet",
-                "Haddock"
-              ]
-            },
-            "example": [
-              "Pork",
-              "Tinned Tomatos"
-            ]
-          },
-          "description": {
+          "area": {
             "type": "string",
-            "description": "The full name of the description",
-            "example": "A tasty chicken dish."
+            "description": "The cuisine area (e.g. Italian, Mexican)",
+            "example": "Italian"
           },
           "instructions": {
             "type": "string",
-            "description": "The full name of the preparation steps",
-            "example": "Cut and fry the chicken"
+            "description": "Preparation steps",
+            "example": "Crack the eggs and beat with a fork..."
           },
-          "timestamps": {
+          "description": {
+            "type": "string",
+            "description": "Short description of the recipe",
+            "example": "A light and fluffy omelette perfect for breakfast."
+          },
+          "thumb": {
+            "type": "string",
+            "description": "URL to recipe thumbnail image",
+            "example": "https://example.com/uploads/image.jpg"
+          },
+          "time": {
+            "type": "string",
+            "description": "Time needed to prepare the recipe",
+            "example": "30 min"
+          },
+          "cals": {
+            "type": "number",
+            "description": "Calories per portion",
+            "example": 250
+          },
+          "ingredients": {
+            "type": "array",
+            "description": "List of ingredients with their measures",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "measure"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Ingredient ID (MongoDB ObjectId)",
+                  "example": "64a1b2c3e25d8c90e88d5678"
+                },
+                "measure": {
+                  "type": "string",
+                  "description": "Quantity and unit of the ingredient",
+                  "example": "2 tbsp"
+                }
+              }
+            }
+          },
+          "owner": {
+            "type": "string",
+            "description": "User ID who created the recipe",
+            "example": "68419ace9cd45e2f9773af01"
+          },
+          "createdAt": {
             "type": "string",
             "format": "date-time",
-            "description": "Recipe last updated date",
-            "example": "2025-06-05T13:25:34.340+00:00"
+            "description": "Date of creation",
+            "example": "2025-06-28T14:55:00Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last update date",
+            "example": "2025-06-29T10:15:00Z"
           }
         }
       },
