@@ -19,7 +19,7 @@ import { validateBody } from '../middlewares/validateBody.js';
 import { updateRecipeSchema } from '../validation/recipe.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { searchRecipesController } from '../controllers/searchRecipesController.js';
-// import { upload } from '../middlewares/multer.js';
+import { upload } from '../middlewares/multer.js';
 import { uploadRecipeImg } from '../middlewares/multer.js';
 import { parseIngredientsMiddleware } from '../utils/parseIngredientsMiddleware.js';
 import { recipeCreateSchema } from '../validation/recipe.js';
@@ -68,17 +68,21 @@ router.get(
 router.post(
   '/recipes',
   authenticate,
-  jsonParser,
   uploadRecipeImg,
   parseIngredientsMiddleware,
   validateBody(recipeCreateSchema),
+
+  // jsonParser,
+  // upload.single('thumb'),
+  // validateBody(recipeSchema),
   ctrlWrapper(createrecipesController)
 );
 
 router.patch(
   '/recipes/:recipeId',
   authenticate,
-  jsonParser,
+  upload.single('thumb'),
+  // jsonParser,
   validateBody(updateRecipeSchema),
   ctrlWrapper(patchRecipesController)
 );

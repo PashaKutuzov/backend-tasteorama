@@ -1,11 +1,16 @@
 import { Router } from 'express';
 
 import ctrlWrapper from '../utils/ctrlWrapper.js';
-import { getIngredientsController } from '../controllers/ingredients.js';
+import {
+  getIngredientsController,
+  createIngredientController,
+} from '../controllers/ingredients.js';
+import { upload } from '../middlewares/multer.js';
 const router = Router();
-router.get(
+router.get('/ingredients', ctrlWrapper(getIngredientsController));
+router.post(
   '/ingredients',
-
-  ctrlWrapper(getIngredientsController)
+  upload.single('img'),
+  ctrlWrapper(createIngredientController)
 );
 export default router;

@@ -125,19 +125,36 @@ export async function createrecipesController(req, res, next) {
   }
 }
 
-export async function patchRecipesController(req, res) {
-  const { recipeId } = req.params;
-  const userId = req.user._id;
-  const result = await patchRecipes(recipeId, req.body, userId);
+export async function patchRecipesController(req, res, next) {
+  try {
+    const { recipeId } = req.params;
+    const userId = req.user._id;
+    const { body, file } = req;
 
-  if (result === null) {
-    throw createHttpError(404, 'Not found');
+    const recipeData = { ...body };
+
+    if (file) {
+      const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
+      const thumbUrl = useCloudinary
+        ? await saveFileToCloudinary(file)
+        : await saveFileToUploadDir(file);
+      recipeData.thumb = thumbUrl;
+    }
+
+    const result = await patchRecipes(recipeId, recipeData, userId);
+
+    if (result === null) {
+      throw createHttpError(404, 'Not found');
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully patched a recipe!',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully patched a recipe!',
-    data: result,
-  });
 }
 
 export async function deleteRecipesByIdController(req, res) {
