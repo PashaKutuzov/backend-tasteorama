@@ -1,7 +1,7 @@
 export function parseIngredientsMiddleware(req, res, next) {
-  if (typeof req.body.ingredients === 'string') {
+  if (typeof req.body.ingredient === 'string') {
     try {
-      req.body.ingredients = JSON.parse(req.body.ingredients);
+      req.body.ingredient = JSON.parse(req.body.ingredient);
     } catch (error) {
       return res.status(400).json({ message: 'Invalid JSON in ingredients' });
     }
