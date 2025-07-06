@@ -119,11 +119,11 @@ const ingredientSchema = Joi.object({
 
 export const recipeCreateSchema = Joi.object({
   name: Joi.string().max(64).required(),
-  descr: Joi.string().max(200).required(),
-  cookTime: Joi.number().min(1).max(360).required(),
+  decr: Joi.string().max(200).required(),
+  cookiesTime: Joi.number().min(1).max(360).required(),
   cals: Joi.number().min(1).max(10000).optional(),
   category: categoryValidator.required(),
-  ingredients: Joi.array().items(ingredientSchema).min(2).max(16).required(),
+  ingredient: Joi.array().items(ingredientSchema).min(2).max(16).required(),
   instruction: Joi.string().max(1200).required(),
   recipeImg: Joi.any().optional(),
   owner: objectIdValidator.optional(),
