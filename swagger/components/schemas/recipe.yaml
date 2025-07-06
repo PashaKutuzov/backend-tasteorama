@@ -1,21 +1,23 @@
 type: object
 required:
+  - userId
   - title
   - category
   - instructions
   - description
+  - timestamps
   - ingredients
 
 properties:
-  _id:
+  userId:
     type: string
-    description: Unique recipe ID
-    example: '64a1b2c3e25d8c90e88d5678'
+    description: Recipe ID
+    example: '68419ace9cd45e2f9773af01'
 
   title:
     type: string
     description: The full name of the recipe
-    example: 'Breakfast Omelette'
+    example: 'BreakFest'
 
   category:
     type: string
@@ -36,65 +38,50 @@ properties:
       - Side
       - Goat
       - Soup
-    example: 'Breakfast'
-
-  area:
-    type: string
-    description: The cuisine area (e.g. Italian, Mexican)
-    example: 'Italian'
-
-  instructions:
-    type: string
-    description: Preparation steps
-    example: 'Crack the eggs and beat with a fork...'
-
-  description:
-    type: string
-    description: Short description of the recipe
-    example: 'A light and fluffy omelette perfect for breakfast.'
-
-  thumb:
-    type: string
-    description: URL to recipe thumbnail image
-    example: 'https://example.com/uploads/image.jpg'
-
-  time:
-    type: string
-    description: Time needed to prepare the recipe
-    example: '30 min'
+    example: 'Chicken'
 
   ingredients:
     type: array
-    description: List of ingredients with their measures
-    minItems: 1
+    description: List of recipe ingredients
     items:
-      type: object
-      required:
-        - id
-        - measure
-      properties:
-        id:
-          type: string
-          description: Ingredient ID
-          example: '64a1b2c3e25d8c90e88d5678'
-        measure:
-          type: string
-          description: Quantity and unit of the ingredient
-          example: '2 tbsp'
+      type: string
+      enum:
+        - Squid
+        - Cabbage
+        - Baking Powder
+        - Smoked Haddock
+        - Pears
+        - Spring Onions
+        - Ginger Cordial
+        - Almond Extract
+        - Tinned Tomatos
+        - Minced Beef
+        - Gruyère
+        - Powdered Sugar
+        - Stilton Cheese
+        - Pork
+        - Sake
+        - Cayenne Pepper
+        - Jalapeno
+        - Barbeque Sauce
+        - Scotch Bonnet
+        - Haddock
+    example:
+      - Pork
+      - Tinned Tomatos
 
-  owner:
+  description:
     type: string
-    description: User ID who created the recipe
-    example: '68419ace9cd45e2f9773af01'
+    description: The full name of the description
+    example: 'A tasty chicken dish.'
 
-  createdAt:
+  instructions:
+    type: string
+    description: The full name of the preparation steps
+    example: 'Cut and fry the chicken'
+
+  timestamps:
     type: string
     format: date-time
-    description: Date of creation
-    example: '2025-06-28T14:55:00Z'
-
-  updatedAt:
-    type: string
-    format: date-time
-    description: Last update date
-    example: '2025-06-29T10:15:00Z'
+    description: Recipe last updated date
+    example: '2025-06-05T13:25:34.340+00:00'
