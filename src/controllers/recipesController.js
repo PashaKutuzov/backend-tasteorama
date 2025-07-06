@@ -19,6 +19,7 @@ import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { UsersCollection } from '../models/userModel.js';
+import { mapRecipeFields } from '../middlewares/mapRecipeFields.js';
 
 export async function getAllRecipesController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -98,7 +99,7 @@ export async function createrecipesController(req, res, next) {
   try {
     const { body, file, user } = req;
 
-    const recipeData = { ...body };
+    const recipeData = mapRecipeFields(body);
 
     if (file) {
       const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
@@ -109,7 +110,7 @@ export async function createrecipesController(req, res, next) {
     } else if (body.thumb) {
       recipeData.thumb = body.thumb;
     }
-    // recipeData.userId = user._id;
+
     recipeData.owner = user._id;
 
     const recipe = await createRecipes(recipeData);
