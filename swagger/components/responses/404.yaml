@@ -1,0 +1,43 @@
+description: Not Found - Session or Authorization header not found
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 404
+          description: HTTP status code
+        message:
+          type: string
+          example: NotFoundError
+          description: Error message indicating that the resource was not found
+        data:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+              example: 'Session not found'
+              description: Detailed message about the missing session or header
+          additionalProperties: false
+    examples:
+      no_token:
+        summary: Session not found
+        value:
+          status: 404
+          message: NotFoundError
+          data:
+            message: Session not found
+      token_expired:
+        summary: Authorization header not found
+        value:
+          status: 404
+          message: NotFoundError
+          data:
+            message: Authorization header not found

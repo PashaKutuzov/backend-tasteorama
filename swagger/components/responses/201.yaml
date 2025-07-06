@@ -1,0 +1,37 @@
+description: Created
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          example: 201
+        message:
+          type: string
+          example: Successfully registered a user!
+        data:
+          type: object
+          required:
+            - _id
+            - name
+            - email
+            - privacyPolicyAcceptedAt
+          properties:
+            _id:
+              type: string
+              example: 66cf9e011ecc457ea69ab77d
+            name:
+              type: string
+              example: 'User One'
+            email:
+              type: string
+              example: userone@mail.com
+            privacyPolicyAcceptedAt:
+              type: string
+              format: date-time
+              example: '2025-06-28T12:00:00.000Z'
