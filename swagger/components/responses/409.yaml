@@ -1,0 +1,33 @@
+description: |
+  **Conflict Error (409)**
+
+  This error occurs when there is a conflict with the current state of the resource.
+  - In this case, the conflict arises because the `email` provided is already in use by another account.
+
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+        - data
+      properties:
+        status:
+          type: integer
+          description: 'HTTP status code indicating the error type.'
+          example: 409
+        message:
+          type: string
+          description: 'A brief summary of the conflict error.'
+          example: 'ConflictError'
+        data:
+          type: object
+          required:
+            - message
+            - errors
+          properties:
+            message:
+              type: string
+              description: 'Specific details about the error, such as the conflicting field.'
+              example: 'Email already in use'
