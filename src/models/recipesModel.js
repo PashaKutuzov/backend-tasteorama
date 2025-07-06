@@ -147,6 +147,9 @@ const recipeSchema = new mongoose.Schema(
     time: {
       type: String,
     },
+    cals: {
+      type: Number,
+    },
     ingredients: {
       type: [ingredientInRecipeSchema],
       required: true,

@@ -8,5 +8,6 @@ export const mapRecipeFields = (body) => {
     ingredients: body.ingredient,
     instructions: body.instruction,
     thumb: body.recipeImg,
+    cals: body.cals,
   };
 };
