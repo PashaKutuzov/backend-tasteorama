@@ -39,6 +39,15 @@ parameters:
     name: ingredient
     schema:
       type: string
+      enum:
+        - Egg
+        - Pears
+        - Spring Onions
+        - Minced Beef
+        - Powdered Sugar
+        - Jalapeno
+        - Madras Paste
+        - Noodles
       example: Egg
     description: Ingredient name to match (partial match allowed)
 
@@ -53,7 +62,7 @@ parameters:
     name: limit
     schema:
       type: integer
-      example: 10
+      example: 12
     description: Number of results per page (default is 10)
 
 responses:

@@ -7,7 +7,7 @@ export const searchRecipesController = async (req, res, next) => {
     category,
     ingredient = '',
     page = '1',
-    limit = '10',
+    limit = '12',
   } = req.query;
 
   let pageNum = Number(page);
