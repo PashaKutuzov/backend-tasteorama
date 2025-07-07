@@ -6,6 +6,7 @@ export const mapRecipeFields = (body) => {
     calories: body.cals,
     category: body.category,
     ingredients: body.ingredient,
+    measure: body.ingredientAmount,
     instructions: body.instruction,
     thumb: body.recipeImg,
     cals: body.cals,
