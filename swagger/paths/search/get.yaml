@@ -88,7 +88,7 @@ responses:
                 recipes:
                   type: array
                   items:
-                    $ref: '../../../components/schemas/recipe.yaml'
+                    $ref: ../../components/responses/500.yaml
                 page:
                   type: integer
                   example: 1
@@ -109,4 +109,4 @@ responses:
                   example: false
 
   '500':
-    $ref: '../../../components/responses/500.yaml'
+    $ref: '../../components/responses/500.yaml'

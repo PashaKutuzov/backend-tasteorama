@@ -11,7 +11,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://backend-tasteorama.onrender.com",
+      "description": "Production server"
+    },
+    {
+      "url": "http://127.0.0.1:8080",
+      "description": "Local development server"
     }
   ],
   "tags": [
@@ -25,7 +30,7 @@
     }
   ],
   "paths": {
-    "/recipes/search": {
+    "/search": {
       "get": {
         "tags": [
           "Recipes"
@@ -134,7 +139,7 @@
                         "recipes": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/recipe"
+                            "$ref": "#/components/schemas/500"
                           }
                         },
                         "page": {
@@ -738,7 +743,7 @@
         "tags": [
           "Recipes"
         ],
-        "summary": "Create recipe",
+        "summary": "Create a new recipe",
         "operationId": "createRecipe",
         "description": "Create a new recipe",
         "security": [
@@ -753,14 +758,16 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "title",
+                  "name",
                   "category",
-                  "instructions",
-                  "description",
-                  "time"
+                  "ingredient",
+                  "ingredientAmount",
+                  "instruction",
+                  "decr",
+                  "cookiesTime"
                 ],
                 "properties": {
-                  "title": {
+                  "name": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 64,
@@ -793,17 +800,17 @@
                     "maxLength": 100,
                     "example": "Italian"
                   },
-                  "description": {
+                  "decr": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 200,
                     "example": "A rich chocolate cake with cream"
                   },
-                  "time": {
+                  "cookiesTime": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 360,
-                    "example": "45 min"
+                    "example": 45
                   },
                   "cals": {
                     "type": "string",
@@ -811,7 +818,7 @@
                     "maxLength": 10000,
                     "example": 350
                   },
-                  "instructions": {
+                  "instruction": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 1200,
@@ -820,12 +827,38 @@
                   "thumb": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Image file upload (optional)"
+                    "description": "Recipe image file (optional, max size 2MB)"
                   },
                   "owner": {
                     "type": "string",
                     "description": "ID of the user (optional)",
                     "example": "685e469e90ec1af79417e1e0"
+                  },
+                  "ingredient": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "description": "A list of ingredients for the recipe.",
+                    "example": [
+                      "Flour",
+                      "Sugar",
+                      "Butter"
+                    ]
+                  },
+                  "ingredientAmount": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 2,
+                    "maxItems": 16,
+                    "description": "A list of corresponding amounts for each ingredient.",
+                    "example": [
+                      "300g",
+                      "2 pcs"
+                    ]
                   }
                 }
               }
@@ -868,7 +901,7 @@
                         "title": "Cake",
                         "category": "Dessert",
                         "instructions": "Follow steps...",
-                        "description": "Some description",
+                        "description": "A rich chocolate cake with cream",
                         "thumb": "https://res.cloudinary.com/drxvkqgab/image/upload/v1751815133/azuzlwauesqx75yu7zog.jpg",
                         "time": "60",
                         "cals": 300,
@@ -901,137 +934,120 @@
           }
         }
       }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
     },
-    "schemas": {
-      "recipe": {
-        "type": "object",
-        "required": [
-          "userId",
-          "title",
-          "category",
-          "instructions",
-          "description",
-          "timestamps",
-          "ingredients"
+    "/recipes/user": {
+      "get": {
+        "tags": [
+          "Recipes"
         ],
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "Recipe ID",
-            "example": "68419ace9cd45e2f9773af01"
+        "summary": "Get list of user's recipes",
+        "operationId": "getUserRecipes",
+        "description": "Get list of recipes created by the authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
           },
-          "title": {
-            "type": "string",
-            "description": "The full name of the recipe",
-            "example": "BreakFest"
+          {
+            "in": "query",
+            "name": "perPage",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
           },
-          "category": {
-            "type": "string",
-            "description": "The full name of the category",
-            "enum": [
-              "Seafood",
-              "Lamb",
-              "Starter",
-              "Chicken",
-              "Beef",
-              "Dessert",
-              "Vegan",
-              "Pork",
-              "Vegetarian",
-              "Miscellaneous",
-              "Pasta",
-              "Breakfast",
-              "Side",
-              "Goat",
-              "Soup"
-            ],
-            "example": "Chicken"
+          {
+            "in": "query",
+            "name": "sortBy",
+            "schema": {
+              "type": "string",
+              "example": "_id"
+            },
+            "description": "All recipe fields can be used. Default is `_id`."
           },
-          "ingredients": {
-            "type": "array",
-            "description": "List of recipe ingredients",
-            "items": {
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "schema": {
               "type": "string",
               "enum": [
-                "Squid",
-                "Cabbage",
-                "Baking Powder",
-                "Smoked Haddock",
-                "Pears",
-                "Spring Onions",
-                "Ginger Cordial",
-                "Almond Extract",
-                "Tinned Tomatos",
-                "Minced Beef",
-                "Gruyère",
-                "Powdered Sugar",
-                "Stilton Cheese",
-                "Pork",
-                "Sake",
-                "Cayenne Pepper",
-                "Jalapeno",
-                "Barbeque Sauce",
-                "Scotch Bonnet",
-                "Haddock"
-              ]
-            },
-            "example": [
-              "Pork",
-              "Tinned Tomatos"
-            ]
-          },
-          "description": {
-            "type": "string",
-            "description": "The full name of the description",
-            "example": "A tasty chicken dish."
-          },
-          "instructions": {
-            "type": "string",
-            "description": "The full name of the preparation steps",
-            "example": "Cut and fry the chicken"
-          },
-          "timestamps": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Recipe last updated date",
-            "example": "2025-06-05T13:25:34.340+00:00"
-          }
-        }
-      }
-    },
-    "responses": {
-      "401": {
-        "description": "Unauthorized error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
+                "asc",
+                "desc"
               ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 401
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
+              "example": "asc"
+            }
+          },
+          {
+            "in": "query",
+            "name": "category",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Seafood",
+                "Lamb",
+                "Starter",
+                "Chicken",
+                "Beef",
+                "Dessert",
+                "Vegan",
+                "Pork",
+                "Vegetarian",
+                "Miscellaneous",
+                "Pasta",
+                "Breakfast",
+                "Side",
+                "Goat",
+                "Soup"
+              ],
+              "example": "Breakfast"
+            },
+            "description": "Filter recipes by category."
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string",
+              "example": "BreakFest"
+            },
+            "description": "Filter recipes by title."
+          },
+          {
+            "in": "query",
+            "name": "ingredients",
+            "schema": {
+              "type": "string",
+              "example": "Pork"
+            },
+            "description": "Filter recipes by ingredient (single value or comma-separated list)."
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string",
+              "example": "A tasty chicken dish."
+            },
+            "description": "Filter recipes by description."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found user's recipes!",
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "required": [
-
                     "status",
                     "message",
                     "data"
@@ -1962,6 +1978,30 @@
       }
     },
     "schemas": {
+      "500": {
+        "description": "Internal Server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal Server error"
+                }
+              }
+            }
+          }
+        }
+      },
       "recipe": {
         "type": "object",
         "required": [
@@ -2199,13 +2239,116 @@
                 "data": {
                   "type": "object",
                   "required": [
-
                     "message"
                   ],
                   "properties": {
                     "message": {
                       "type": "string",
                       "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Session or Authorization header not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 404,
+                  "description": "HTTP status code"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "NotFoundError",
+                  "description": "Error message indicating that the resource was not found"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Session not found",
+                      "description": "Detailed message about the missing session or header"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "examples": {
+              "no_token": {
+                "summary": "Session not found",
+                "value": {
+                  "status": 404,
+                  "message": "NotFoundError",
+                  "data": {
+                    "message": "Session not found"
+                  }
+                }
+              },
+              "token_expired": {
+                "summary": "Authorization header not found",
+                "value": {
+                  "status": 404,
+                  "message": "NotFoundError",
+                  "data": {
+                    "message": "Authorization header not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "**Conflict Error (409)**\n\nThis error occurs when there is a conflict with the current state of the resource.\n- In this case, the conflict arises because the `email` provided is already in use by another account.\n",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "description": "HTTP status code indicating the error type.",
+                  "example": 409
+                },
+                "message": {
+                  "type": "string",
+                  "description": "A brief summary of the conflict error.",
+                  "example": "ConflictError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message",
+                    "errors"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Specific details about the error, such as the conflicting field.",
+                      "example": "Email already in use"
                     }
                   }
                 }
