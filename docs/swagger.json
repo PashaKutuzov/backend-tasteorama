@@ -108,7 +108,7 @@
             "name": "limit",
             "schema": {
               "type": "integer",
-              "example": 10
+              "example": 12
             },
             "description": "Number of results per page (default is 10)"
           }
