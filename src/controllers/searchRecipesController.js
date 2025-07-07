@@ -29,8 +29,8 @@ export const searchRecipesController = async (req, res, next) => {
 
   if (ingredient.trim()) {
     const matchedIngredients = await Ingredients.find({
-      name: { $regex: ingredient.trim(), $options: 'i' },
-    });
+      name: ingredient.trim(),
+    }).sort({ name: 1 });
 
     if (matchedIngredients.length === 0) {
       return res.json({
@@ -41,7 +41,7 @@ export const searchRecipesController = async (req, res, next) => {
       });
     }
 
-    const ingredientIds = matchedIngredients.map((i) => i._id);
+    const ingredientIds = matchedIngredients.map((i) => i._id.toString());
     filter['ingredients.id'] = { $in: ingredientIds };
   }
 

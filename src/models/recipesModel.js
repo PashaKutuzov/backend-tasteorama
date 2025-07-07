@@ -107,7 +107,7 @@ import mongoose from 'mongoose';
 const ingredientInRecipeSchema = new mongoose.Schema(
   {
     id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: 'Ingredient',
       required: true,
     },
@@ -153,12 +153,6 @@ const recipeSchema = new mongoose.Schema(
     ingredients: {
       type: [ingredientInRecipeSchema],
       required: true,
-      validate: {
-        validator: function (value) {
-          return value.length > 0;
-        },
-        message: 'At least one ingredient is required.',
-      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
