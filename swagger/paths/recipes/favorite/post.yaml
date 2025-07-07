@@ -22,41 +22,52 @@ requestBody:
 
 responses:
   '201':
-    description: Successfully added recipe to favorites
+    description: Recipe added to favorites
     content:
       application/json:
         schema:
           type: object
           required:
-            - status
             - message
             - data
           properties:
-            status:
-              type: integer
-              example: 201
             message:
               type: string
-              example: Recipe added to favorites successfully
+              example: Recipe added to favorites
             data:
               type: object
               properties:
-                userId:
+                _id:
                   type: string
+                  description: User ID
                   example: '123456789abcdef'
                 favorites:
                   type: array
+                  description: List of favorite recipe IDs
                   items:
                     type: string
                   example:
                     - '68419ace9cd45e2f9773af01'
                     - '71cf38ed6b354c63bc0012c8'
 
+  '400':
+    description: Missing or invalid recipe ID
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+              example: Recipe ID is required
+
   '401':
     $ref: '../../../components/responses/401.yaml'
 
   '404':
-    description: Recipe not found
+    description: Recipe not found or access denied
     content:
       application/json:
         schema:
@@ -70,7 +81,7 @@ responses:
               example: 404
             message:
               type: string
-              example: Recipe not found
+              example: Recipe not found or access denied
 
   '500':
     $ref: '../../../components/responses/500.yaml'

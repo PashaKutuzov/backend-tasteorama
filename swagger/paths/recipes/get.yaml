@@ -24,7 +24,7 @@ parameters:
     schema:
       type: string
       example: _id
-    description: All recipes fields can be used. Default is `_id`.
+    description: Sort by any recipe field. Default is `_id`.
 
   - in: query
     name: sortOrder
@@ -60,43 +60,22 @@ parameters:
     name: title
     schema:
       type: string
-      example: BreakFest
-    description: Filter recipes by title.
+      example: Breakfast Omelette
+    description: Filter recipes by title (partial match).
 
   - in: query
     name: ingredients
     schema:
       type: string
-      enum:
-        - Squid
-        - Cabbage
-        - Baking Powder
-        - Smoked Haddock
-        - Pears
-        - Spring Onions
-        - Ginger Cordial
-        - Almond Extract
-        - Tinned Tomatos
-        - Minced Beef
-        - Gruyère
-        - Powdered Sugar
-        - Stilton Cheese
-        - Pork
-        - Sake
-        - Cayenne Pepper
-        - Jalapeno
-        - Barbeque Sauce
-        - Scotch Bonnet
-        - Haddock
       example: Pork
-    description: Filter recipes by ingredient.
+    description: Filter recipes by ingredient (partial match or comma-separated values).
 
   - in: query
     name: description
     schema:
       type: string
       example: A tasty chicken dish.
-    description: Filter recipes by description.
+    description: Filter recipes by description (partial match).
 
 responses:
   '200':
@@ -132,16 +111,16 @@ responses:
                   items:
                     $ref: '../../components/schemas/recipe.yaml'
                 page:
-                  type: number
+                  type: integer
                   example: 2
                 perPage:
-                  type: number
+                  type: integer
                   example: 4
                 totalItems:
-                  type: number
+                  type: integer
                   example: 4
                 totalPages:
-                  type: number
+                  type: integer
                   example: 1
                 hasNextPage:
                   type: boolean
