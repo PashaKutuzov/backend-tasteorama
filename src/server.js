@@ -18,7 +18,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://tasteorama.vercel.app',
+  'https://frontend-tasteorama.vercel.app',
 ];
 
 app.use(
