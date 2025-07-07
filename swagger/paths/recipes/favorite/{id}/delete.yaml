@@ -16,14 +16,44 @@ parameters:
     description: ID of the recipe to remove from favorites
 
 responses:
-  '204':
-    description: Successfully removed recipe from favorites. No content returned.
+  '200':
+    description: Successfully removed recipe from favorites
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Recipe removed from favorites
+            data:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  description: User ID
+                  example: '123456789abcdef'
+                favorites:
+                  type: array
+                  description: Updated list of favorite recipe IDs
+                  items:
+                    type: string
+                  example:
+                    - '68419ace9cd45e2f9773af01'
+                    - '71cf38ed6b354c63bc0012c8'
 
   '401':
     $ref: '../../../../components/responses/401.yaml'
 
   '404':
-    description: Recipe not found in favorites
+    description: Recipe not found or access denied
     content:
       application/json:
         schema:
@@ -37,7 +67,7 @@ responses:
               example: 404
             message:
               type: string
-              example: Recipe not found in favorites
+              example: Recipe not found or access denied
 
   '500':
     $ref: '../../../../components/responses/500.yaml'
