@@ -139,7 +139,7 @@
                         "recipes": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/500"
+                            "$ref": "#/components/schemas/recipe"
                           }
                         },
                         "page": {
@@ -167,6 +167,54 @@
                           "example": false
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid query parameters. Please check the title, category, or ingredient fields."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - No recipes match the given criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "No recipes found for the provided criteria."
                     }
                   }
                 }
@@ -1978,30 +2026,6 @@
       }
     },
     "schemas": {
-      "500": {
-        "description": "Internal Server error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 500
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Internal Server error"
-                }
-              }
-            }
-          }
-        }
-      },
       "recipe": {
         "type": "object",
         "required": [
@@ -2014,7 +2038,7 @@
         "properties": {
           "_id": {
             "type": "string",
-            "description": "Unique recipe ID",
+            "description": "Unique recipe ID (MongoDB ObjectId)",
             "example": "64a1b2c3e25d8c90e88d5678"
           },
           "title": {
@@ -2087,7 +2111,7 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "description": "Ingredient ID (MongoDB ObjectId)",
+                  "description": "Ingredient ID (MongoDB ObjectId, ref to Ingredient)",
                   "example": "64a1b2c3e25d8c90e88d5678"
                 },
                 "measure": {
@@ -2100,7 +2124,7 @@
           },
           "owner": {
             "type": "string",
-            "description": "User ID who created the recipe",
+            "description": "User ID who created the recipe (MongoDB ObjectId)",
             "example": "68419ace9cd45e2f9773af01"
           },
           "createdAt": {

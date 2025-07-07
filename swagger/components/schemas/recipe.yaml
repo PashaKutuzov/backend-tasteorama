@@ -5,11 +5,10 @@ required:
   - instructions
   - description
   - ingredients
-
 properties:
   _id:
     type: string
-    description: Unique recipe ID
+    description: Unique recipe ID (MongoDB ObjectId)
     example: '64a1b2c3e25d8c90e88d5678'
 
   title:
@@ -80,7 +79,7 @@ properties:
       properties:
         id:
           type: string
-          description: Ingredient ID (MongoDB ObjectId)
+          description: Ingredient ID (MongoDB ObjectId, ref to Ingredient)
           example: '64a1b2c3e25d8c90e88d5678'
         measure:
           type: string
@@ -89,7 +88,7 @@ properties:
 
   owner:
     type: string
-    description: User ID who created the recipe
+    description: User ID who created the recipe (MongoDB ObjectId)
     example: '68419ace9cd45e2f9773af01'
 
   createdAt:

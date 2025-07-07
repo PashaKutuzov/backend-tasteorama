@@ -88,7 +88,7 @@ responses:
                 recipes:
                   type: array
                   items:
-                    $ref: ../../components/responses/500.yaml
+                    $ref: '../../components/schemas/recipe.yaml'
                 page:
                   type: integer
                   example: 1
@@ -107,6 +107,40 @@ responses:
                 hasPreviousPage:
                   type: boolean
                   example: false
+
+  '400':
+    description: Bad Request - Invalid query parameters
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Invalid query parameters. Please check the title, category, or ingredient fields.
+
+  '404':
+    description: Not Found - No recipes match the given criteria
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: No recipes found for the provided criteria.
 
   '500':
     $ref: '../../components/responses/500.yaml'
