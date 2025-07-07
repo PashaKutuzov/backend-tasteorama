@@ -20,6 +20,8 @@ import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { UsersCollection } from '../models/userModel.js';
 import { mapRecipeFields } from '../middlewares/mapRecipeFields.js';
+import { recipeModel } from '../models/recipesModel.js';
+import { getIngredientIds } from '../utils/getIngredientIds.js';
 
 export async function getAllRecipesController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -99,7 +101,17 @@ export async function createrecipesController(req, res, next) {
   try {
     const { body, file, user } = req;
 
+    if (!Array.isArray(body.ingredient)) {
+      return res.status(400).json({
+        status: 400,
+        message: '"ingredient" must be an array',
+      });
+    }
+
+    const ingredientsWithIds = await getIngredientIds(body.ingredient);
+
     const recipeData = mapRecipeFields(body);
+    recipeData.ingredients = ingredientsWithIds;
 
     if (file) {
       const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
@@ -113,7 +125,7 @@ export async function createrecipesController(req, res, next) {
 
     recipeData.owner = user._id;
 
-    const recipe = await createRecipes(recipeData);
+    const recipe = await recipeModel.create(recipeData);
 
     res.status(201).json({
       status: 201,
