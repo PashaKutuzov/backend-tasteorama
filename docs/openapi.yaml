@@ -24,10 +24,10 @@ paths:
   /recipes/{id}:
     get:
       $ref: ../swagger/paths/recipes/{id}/get.yaml
-    patch:
-      $ref: ../swagger/paths/recipes/{id}/patch.yaml
-    delete:
-      $ref: ../swagger/paths/recipes/{id}/delete.yaml
+    # patch:
+    #   $ref: ../swagger/paths/recipes/{id}/patch.yaml
+    # delete:
+    #   $ref: ../swagger/paths/recipes/{id}/delete.yaml
   /recipes:
     get:
       $ref: '../swagger/paths/recipes/get.yaml'
