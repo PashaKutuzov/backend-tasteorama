@@ -9,5 +9,6 @@ export const mapRecipeFields = (body) => {
     measure: body.ingredientAmount,
     instructions: body.instruction,
     thumb: body.recipeImg,
+    cals: body.cals,
   };
 };

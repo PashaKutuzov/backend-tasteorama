@@ -113,7 +113,7 @@ async function getAllowedCategories() {
 }
 
 const ingredientSchema = Joi.object({
-  name: Joi.string().required(),
+  id: objectIdValidator.required(),
   measure: Joi.string().required(),
 });
 
