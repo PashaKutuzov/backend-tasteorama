@@ -2,9 +2,9 @@ import createHttpError from 'http-errors';
 import { isValidObjectId } from 'mongoose';
 
 export function isValidId(req, res, next) {
-  const { id } = req.params;
+  const { recipeId } = req.params;
 
-  if (!isValidObjectId(id)) {
+  if (!isValidObjectId(recipeId)) {
     return next(createHttpError.BadRequest('ID should be a valid ObjectId'));
   }
 
