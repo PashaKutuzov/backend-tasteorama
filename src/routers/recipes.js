@@ -2,9 +2,7 @@ import express from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
-  // getRecipesByIdController,
-  // getUsersRecipesByIdController,
-  getAllRecipesController,
+  // getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
@@ -15,7 +13,6 @@ import {
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
-// import { recipeSchema, updateRecipeSchema } from '../validation/recipe.js';
 import { updateRecipeSchema } from '../validation/recipe.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { searchRecipesController } from '../controllers/searchRecipesController.js';
@@ -25,9 +22,9 @@ import { parseIngredientsMiddleware } from '../utils/parseIngredientsMiddleware.
 import { recipeCreateSchema } from '../validation/recipe.js';
 
 const router = express.Router();
-const jsonParser = express.json();
 
-router.get('/search', ctrlWrapper(searchRecipesController));
+// router.get('/recipes', ctrlWrapper(getAllRecipesController));
+router.get('/recipes', ctrlWrapper(searchRecipesController));
 
 router.get(
   '/recipes/favorite',
@@ -38,7 +35,6 @@ router.get(
 router.post(
   '/recipes/favorite',
   authenticate,
-  jsonParser,
   ctrlWrapper(addFavoriteRecipeController)
 );
 
@@ -49,21 +45,12 @@ router.delete(
   ctrlWrapper(deleteFavoriteRecipeController)
 );
 
-router.get('/recipes', ctrlWrapper(getAllRecipesController));
-
 router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
 router.get(
   '/recipes/:recipeId',
-
-  // isValidId,
+  isValidId,
   ctrlWrapper(getRecipesByIdController)
 );
-// router.get(
-//   '/recipes/:recipeId',
-//   authenticate,
-//   // isValidId,
-//   ctrlWrapper(getUsersRecipesByIdController)
-// );
 
 router.post(
   '/recipes',
@@ -71,10 +58,6 @@ router.post(
   uploadRecipeImg,
   parseIngredientsMiddleware,
   validateBody(recipeCreateSchema),
-
-  // jsonParser,
-  // upload.single('thumb'),
-  // validateBody(recipeSchema),
   ctrlWrapper(createrecipesController)
 );
 
@@ -82,7 +65,6 @@ router.patch(
   '/recipes/:recipeId',
   authenticate,
   upload.single('thumb'),
-  // jsonParser,
   validateBody(updateRecipeSchema),
   ctrlWrapper(patchRecipesController)
 );

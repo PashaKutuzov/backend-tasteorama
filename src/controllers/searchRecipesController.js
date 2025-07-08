@@ -50,13 +50,14 @@ export const searchRecipesController = async (req, res, next) => {
   const totalPages = Math.ceil(totalRecipes / limitNum);
 
   res.json({
-    status: 'success',
-    code: 200,
+    status: 200,
+    message: 'Successfully found all recipes!',
     data: {
-      result: recipes,
-      totalRecipes,
+      data: recipes,
+      page: pageNum,
+      perPage: limitNum,
+      totalItems: totalRecipes,
       totalPages,
-      currentPage: pageNum,
     },
   });
 };
