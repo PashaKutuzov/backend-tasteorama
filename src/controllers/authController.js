@@ -32,12 +32,14 @@ export const registerUserController = async (req, res) => {
   });
 };
 
+const maxAge = FIFTEEN_MINUTES;
+
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
 
   setupSession(res, session);
 
-  const expiresIn = FIFTEEN_MINUTES;
+  const expiresIn = new Date(Date.now() + maxAge);
 
   res.json({
     status: 200,
