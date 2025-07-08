@@ -194,7 +194,7 @@ export async function addFavoriteRecipeController(req, res, next) {
 export async function deleteFavoriteRecipeController(req, res, next) {
   const userId = req.user._id;
 
-  const { id: recipeId } = req.params;
+  const { recipeId } = req.params;
   const user = await deleteFavoriteRecipe(userId, recipeId);
   if (!user) {
     throw createHttpError(404, 'Recipe not found or access denied');
