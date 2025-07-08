@@ -1,20 +1,14 @@
 tags:
   - Recipes
-summary: Get recipe by id
-operationId: getRecipeById
-description: 'Get recipe by id'
+summary: Get list of user's favorite recipes
+operationId: getUserFavoriteRecipes
+description: Returns all favorite recipes of the authenticated user
 security:
   - bearerAuth: []
-parameters:
-  - in: path
-    name: id
-    required: true
-    schema:
-      type: string
-      example: '65ca67e7ae7f10c88b598384'
+
 responses:
   '200':
-    description: 'Get recipe by id'
+    description: Favorite recipes retrieved successfully
     content:
       application/json:
         schema:
@@ -29,14 +23,17 @@ responses:
               example: 200
             message:
               type: string
-              example: Successfully found recipe with id 65ca67e7ae7f10c88b598384!
+              example: Favorite recipes retrieved successfully
             data:
-              type: object
-              $ref: '../../../components/schemas/recipe.yaml'
+              type: array
+              items:
+                $ref: '../../../components/schemas/recipe.yaml'
+
   '401':
     $ref: '../../../components/responses/401.yaml'
+
   '404':
-    description: Recipe not found
+    description: User not found
     content:
       application/json:
         schema:
@@ -50,7 +47,7 @@ responses:
               example: 404
             message:
               type: string
-              example: Recipes not found
+              example: User not found
 
   '500':
     $ref: '../../../components/responses/500.yaml'

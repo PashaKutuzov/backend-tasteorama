@@ -12,19 +12,22 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  - url: https://backend-tasteorama.onrender.com
+  - url: https://backend-tasteorama-zji6.onrender.com
     description: Production server
   - url: http://127.0.0.1:8080
     description: Local development server
 
 paths:
+  /search:
+    get:
+      $ref: '../swagger/paths/search/get.yaml'
   /recipes/{id}:
     get:
       $ref: ../swagger/paths/recipes/{id}/get.yaml
-    patch:
-      $ref: ../swagger/paths/recipes/{id}/patch.yaml
-    delete:
-      $ref: ../swagger/paths/recipes/{id}/delete.yaml
+    # patch:
+    #   $ref: ../swagger/paths/recipes/{id}/patch.yaml
+    # delete:
+    #   $ref: ../swagger/paths/recipes/{id}/delete.yaml
   /recipes:
     get:
       $ref: '../swagger/paths/recipes/get.yaml'
@@ -34,6 +37,8 @@ paths:
     get:
       $ref: '../swagger/paths/recipes/user/get.yaml'
   /recipes/favorite:
+    get:
+      $ref: '../swagger/paths/recipes/favorite/get.yaml'
     post:
       $ref: '../swagger/paths/recipes/favorite/post.yaml'
   /recipes/favorite/{id}:
@@ -45,6 +50,9 @@ paths:
   /ingredients:
     get:
       $ref: '../swagger/paths/ingredients/get.yaml'
+  /users:
+    get:
+      $ref: '../swagger/paths/users/get.yaml'
 
   /auth/register:
     post:
@@ -58,12 +66,12 @@ paths:
   /auth/logout:
     post:
       $ref: ../swagger/paths/auth/logout/post.yaml
-  /auth/reset-pwd:
-    post:
-      $ref: ../swagger/paths/auth/reset-pwd/post.yaml
-  /auth/send-reset-email:
-    post:
-      $ref: ../swagger/paths/auth/send-reset-email/post.yaml
+  # /auth/reset-pwd:
+  #   post:
+  #     $ref: ../swagger/paths/auth/reset-pwd/post.yaml
+  # /auth/send-reset-email:
+  #   post:
+  #     $ref: ../swagger/paths/auth/send-reset-email/post.yaml
 
 components:
   securitySchemes:

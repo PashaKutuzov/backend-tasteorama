@@ -15,12 +15,20 @@ import {
 } from '../controllers/recipesController.js';
 import { isValidId } from '../middlewares/isValid.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { recipeSchema, updateRecipeSchema } from '../validation/recipe.js';
+// import { recipeSchema, updateRecipeSchema } from '../validation/recipe.js';
+import { updateRecipeSchema } from '../validation/recipe.js';
 import { authenticate } from '../middlewares/authenticate.js';
-
+import { searchRecipesController } from '../controllers/searchRecipesController.js';
 import { upload } from '../middlewares/multer.js';
+import { uploadRecipeImg } from '../middlewares/multer.js';
+import { parseIngredientsMiddleware } from '../utils/parseIngredientsMiddleware.js';
+import { recipeCreateSchema } from '../validation/recipe.js';
+
 const router = express.Router();
 const jsonParser = express.json();
+
+router.get('/search', ctrlWrapper(searchRecipesController));
+
 router.get(
   '/recipes/favorite',
   authenticate,
@@ -60,15 +68,21 @@ router.get(
 router.post(
   '/recipes',
   authenticate,
-  jsonParser,
-  upload.single('thumb'),
-  validateBody(recipeSchema),
+  uploadRecipeImg,
+  parseIngredientsMiddleware,
+  validateBody(recipeCreateSchema),
+
+  // jsonParser,
+  // upload.single('thumb'),
+  // validateBody(recipeSchema),
   ctrlWrapper(createrecipesController)
 );
+
 router.patch(
   '/recipes/:recipeId',
   authenticate,
-  jsonParser,
+  upload.single('thumb'),
+  // jsonParser,
   validateBody(updateRecipeSchema),
   ctrlWrapper(patchRecipesController)
 );

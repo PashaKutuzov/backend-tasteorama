@@ -18,6 +18,10 @@ import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { UsersCollection } from '../models/userModel.js';
+import { mapRecipeFields } from '../middlewares/mapRecipeFields.js';
+import { recipeModel } from '../models/recipesModel.js';
+import { getIngredientIds } from '../utils/getIngredientIds.js';
 
 export async function getAllRecipesController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -97,7 +101,17 @@ export async function createrecipesController(req, res, next) {
   try {
     const { body, file, user } = req;
 
-    const recipeData = { ...body };
+    if (!Array.isArray(body.ingredient)) {
+      return res.status(400).json({
+        status: 400,
+        message: '"ingredient" must be an array',
+      });
+    }
+
+    const ingredientsWithIds = await getIngredientIds(body.ingredient);
+
+    const recipeData = mapRecipeFields(body);
+    recipeData.ingredients = ingredientsWithIds;
 
     if (file) {
       const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
@@ -108,9 +122,10 @@ export async function createrecipesController(req, res, next) {
     } else if (body.thumb) {
       recipeData.thumb = body.thumb;
     }
-    recipeData.userId = user._id;
 
-    const recipe = await createRecipes(recipeData);
+    recipeData.owner = user._id;
+
+    const recipe = await recipeModel.create(recipeData);
 
     res.status(201).json({
       status: 201,
@@ -122,19 +137,36 @@ export async function createrecipesController(req, res, next) {
   }
 }
 
-export async function patchRecipesController(req, res) {
-  const { recipeId } = req.params;
-  const userId = req.user._id;
-  const result = await patchRecipes(recipeId, req.body, userId);
+export async function patchRecipesController(req, res, next) {
+  try {
+    const { recipeId } = req.params;
+    const userId = req.user._id;
+    const { body, file } = req;
 
-  if (result === null) {
-    throw createHttpError(404, 'Not found');
+    const recipeData = { ...body };
+
+    if (file) {
+      const useCloudinary = getEnvVar('ENABLE_CLOUDINARY') === 'true';
+      const thumbUrl = useCloudinary
+        ? await saveFileToCloudinary(file)
+        : await saveFileToUploadDir(file);
+      recipeData.thumb = thumbUrl;
+    }
+
+    const result = await patchRecipes(recipeId, recipeData, userId);
+
+    if (result === null) {
+      throw createHttpError(404, 'Not found');
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully patched a recipe!',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully patched a recipe!',
-    data: result,
-  });
 }
 
 export async function deleteRecipesByIdController(req, res) {
@@ -152,12 +184,22 @@ export async function getFavoriteRecipeController(req, res, next) {
   try {
     const userId = req.user._id;
 
-    const recipes = await getFavoriteRecipes(userId);
+    // const recipes = await getFavoriteRecipes(userId);
+    // data: recipes,
+
+    const user = await UsersCollection.findById(userId).populate('favorites');
+
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'User not found',
+      });
+    }
 
     res.status(200).json({
       status: 200,
       message: 'Favorite recipes retrieved successfully',
-      data: recipes,
+      data: user.favorites,
     });
   } catch (error) {
     next(error);
@@ -170,11 +212,15 @@ export async function addFavoriteRecipeController(req, res, next) {
 
     const { recipeId } = req.body;
 
+    if (!recipeId) {
+      return res.status(400).json({ message: 'Recipe ID is required' });
+    }
+
     const user = await addFavoriteRecipe(userId, recipeId);
 
-    if (!user) {
-      throw createHttpError(404, 'Recipe not found or access denied');
-    }
+    // if (!user) {
+    //   throw createHttpError(404, 'Recipe not found or access denied');
+    // }
 
     res.status(201).json({ message: 'Recipe added to favorites', data: user });
   } catch (error) {

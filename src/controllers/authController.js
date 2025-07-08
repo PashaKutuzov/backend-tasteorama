@@ -6,6 +6,7 @@ import {
 } from '../services/authServices.js';
 import { ONE_DAY } from '../constants/index.js';
 import createHttpError from 'http-errors';
+import { FIFTEEN_MINUTES } from '../constants/index.js';
 
 const setupSession = (res, session, maxAge = ONE_DAY) => {
   res.cookie('refreshToken', session.refreshToken, {
@@ -31,16 +32,21 @@ export const registerUserController = async (req, res) => {
   });
 };
 
+const maxAge = FIFTEEN_MINUTES;
+
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
 
   setupSession(res, session);
+
+  const expiresIn = new Date(Date.now() + maxAge);
 
   res.json({
     status: 200,
     message: 'Login successfully',
     data: {
       accessToken: session.accessToken,
+      expiresIn: expiresIn,
     },
   });
 };
@@ -67,12 +73,14 @@ export const refreshUserSessionController = async (req, res) => {
   const session = await refreshUsersSession({ sessionId, refreshToken });
 
   setupSession(res, session);
+  const expiresIn = new Date(Date.now() + maxAge);
 
   res.json({
     status: 200,
     message: 'Successfully refreshed a session!',
     data: {
       accessToken: session.accessToken,
+      expiresIn: expiresIn,
     },
   });
 };

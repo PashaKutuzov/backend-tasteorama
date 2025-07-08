@@ -1,8 +1,8 @@
 tags:
   - Recipes
-summary: Create recipe
+summary: Create a new recipe
 operationId: createRecipe
-description: Create Recipe
+description: Create a new recipe
 security:
   - bearerAuth: []
 
@@ -13,27 +13,22 @@ requestBody:
       schema:
         type: object
         required:
-          - userId
-          - title
+          - name
           - category
-          - instructions
-          - description
-          - timestamps
-          - ingredients
+          - ingredient
+          - ingredientAmount
+          - instruction
+          - decr
+          - cookiesTime
         properties:
-          userId:
+          name:
             type: string
-            description: Recipe ID
-            example: '68419ace9cd45e2f9773af01'
-
-          title:
-            type: string
-            description: The full name of the recipe
-            example: 'BreakFest'
+            minLength: 1
+            maxLength: 64
+            example: Chocolate Cake
 
           category:
             type: string
-            description: The full name of the category
             enum:
               - Seafood
               - Lamb
@@ -50,57 +45,73 @@ requestBody:
               - Side
               - Goat
               - Soup
-            example: 'Chicken'
+            example: Dessert
 
-          ingredients:
+          area:
+            type: string
+            minLength: 1
+            maxLength: 100
+            example: Italian
+
+          decr:
+            type: string
+            minLength: 1
+            maxLength: 200
+            example: A rich chocolate cake with cream
+
+          cookiesTime:
+            type: string
+            minLength: 1
+            maxLength: 360
+            example: 45
+
+          cals:
+            type: string
+            minLength: 1
+            maxLength: 10000
+            example: 350
+
+          instruction:
+            type: string
+            minLength: 1
+            maxLength: 1200
+            example: Mix everything and bake at 180°C for 40 min
+
+          thumb:
+            type: string
+            format: binary
+            description: Recipe image file (optional, max size 2MB)
+
+          owner:
+            type: string
+            description: ID of the user (optional)
+            example: 685e469e90ec1af79417e1e0
+
+          ingredient:
             type: array
-            description: List of recipe ingredients
             items:
               type: string
-              enum:
-                - Squid
-                - Cabbage
-                - Baking Powder
-                - Smoked Haddock
-                - Pears
-                - Spring Onions
-                - Ginger Cordial
-                - Almond Extract
-                - Tinned Tomatos
-                - Minced Beef
-                - Gruyère
-                - Powdered Sugar
-                - Stilton Cheese
-                - Pork
-                - Sake
-                - Cayenne Pepper
-                - Jalapeno
-                - Barbeque Sauce
-                - Scotch Bonnet
-                - Haddock
+            minItems: 1
+            description: A list of ingredients for the recipe.
             example:
-              - Pork
-              - Tinned Tomatos
+              - Flour
+              - Sugar
+              - Butter
 
-          description:
-            type: string
-            description: The full name of the description
-            example: 'A tasty chicken dish.'
-
-          instructions:
-            type: string
-            description: The full name of the preparation steps
-            example: 'Cut and fry the chicken'
-
-          timestamps:
-            type: string
-            format: date-time
-            description: Recipe creation timestamp
-            example: '2025-06-05T13:25:34.340+00:00'
+          ingredientAmount:
+            type: array
+            items:
+              type: string
+            minItems: 2
+            maxItems: 16
+            description: A list of corresponding amounts for each ingredient.
+            example:
+              - 300g
+              - 2 pcs
 
 responses:
   '201':
-    description: Creates a recipe
+    description: Successfully created a recipe
     content:
       application/json:
         schema:
@@ -118,6 +129,29 @@ responses:
               example: Successfully created a recipe!
             data:
               $ref: '../../components/schemas/recipe.yaml'
+        examples:
+          example:
+            summary: Recipe created
+            value:
+              status: 201
+              message: Successfully created a recipe!
+              data:
+                title: Cake
+                category: Dessert
+                instructions: Follow steps...
+                description: A rich chocolate cake with cream
+                thumb: https://res.cloudinary.com/drxvkqgab/image/upload/v1751815133/azuzlwauesqx75yu7zog.jpg
+                time: '60'
+                cals: 300
+                ingredients:
+                  - id: 640c2dd963a319ea671e367e
+                    measure: 300g
+                  - id: 640c2dd963a319ea671e3687
+                    measure: 2 pcs
+                owner: 685e469e90ec1af79417e1e0
+                _id: 686a93dd70a76a8fd13cc748
+                createdAt: 2025-07-06T15:18:53.977Z
+                updatedAt: 2025-07-06T15:18:53.977Z
 
   '401':
     $ref: '../../components/responses/401.yaml'

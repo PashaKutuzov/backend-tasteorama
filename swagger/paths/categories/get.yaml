@@ -27,27 +27,24 @@ responses:
             data:
               type: array
               items:
-                type: string
-                enum:
-                  - Seafood
-                  - Lamb
-                  - Starter
-                  - Chicken
-                  - Beef
-                  - Dessert
-                  - Vegan
-                  - Pork
-                  - Vegetarian
-                  - Miscellaneous
-                  - Pasta
-                  - Breakfast
-                  - Side
-                  - Goat
-                  - Soup
+                type: object
+                required:
+                  - _id
+                  - name
+                properties:
+                  _id:
+                    type: string
+                    example: '6462a6cd4c3d0ddd28897f8e'
+                  name:
+                    type: string
+                    example: 'Beef'
               example:
-                - Chicken
-                - Vegan
-                - Dessert
+                - _id: '6462a6cd4c3d0ddd28897f8e'
+                  name: 'Beef'
+                - _id: '6462a6cd4c3d0ddd28897f8f'
+                  name: 'Chicken'
+                - _id: '6462a6cd4c3d0ddd28897f90'
+                  name: 'Vegan'
 
   '401':
     $ref: '../../components/responses/401.yaml'
