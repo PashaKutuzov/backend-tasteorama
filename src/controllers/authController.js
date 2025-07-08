@@ -73,12 +73,14 @@ export const refreshUserSessionController = async (req, res) => {
   const session = await refreshUsersSession({ sessionId, refreshToken });
 
   setupSession(res, session);
+  const expiresIn = new Date(Date.now() + maxAge);
 
   res.json({
     status: 200,
     message: 'Successfully refreshed a session!',
     data: {
       accessToken: session.accessToken,
+      expiresIn: expiresIn,
     },
   });
 };
