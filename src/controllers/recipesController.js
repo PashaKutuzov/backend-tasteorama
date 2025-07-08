@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import {
-  getAllRecipes,
+  getMyRecipes,
   getRecipes,
   deleteRecipesById,
   patchRecipes,
@@ -53,19 +53,7 @@ export async function getRecipesByIdController(req, res) {
 }
 
 export async function getRecipesController(req, res) {
-  const { page, perPage } = parsePaginationParams(req.query);
-  const { sortBy, sortOrder } = parseSortParams(req.query);
-  const filter = parseFilterParams(req.query);
-  const userId = req.user._id;
-
-  const recipes = await getAllRecipes({
-    page,
-    perPage,
-    userId,
-    sortBy,
-    sortOrder,
-    filter,
-  });
+  const recipes = await getMyRecipes(req.user);
   res.json({
     status: 200,
     message: 'Successfully found recipes!',

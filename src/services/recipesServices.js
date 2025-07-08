@@ -37,39 +37,15 @@ export async function getRecipes({
   };
 }
 
-export async function getAllRecipes({
-  page,
-  perPage,
-  sortBy,
-  sortOrder,
-  userId,
-  filter = {},
-}) {
-  const skip = page > 0 ? (page - 1) * perPage : 0;
+export async function getMyRecipes(user) {
+  const myRecipesIds = user.myRecipes
+    .filter((id) => mongoose.Types.ObjectId.isValid(id))
+    .map((id) => new mongoose.Types.ObjectId(id));
 
-  const recipeQuery = recipeModel.find();
-  recipeQuery.where('userId').equals(userId);
-  if (filter.type) {
-    recipeQuery.where('contactType').equals(filter.type);
-  }
-  const [totalItems, data] = await Promise.all([
-    recipeModel.countDocuments(recipeQuery.getQuery()),
-    recipeQuery
-      .skip(skip)
-      .limit(perPage)
-      .sort({ [sortBy]: sortOrder }),
-  ]);
-  const totalPages = Math.ceil(totalItems / perPage);
-
-  return {
-    data,
-    page,
-    perPage,
-    totalItems,
-    totalPages,
-    hasPreviousPage: page > 1,
-    hasNextPage: totalPages > page,
-  };
+  const recipes = await recipeModel.find({
+    _id: { $in: myRecipesIds },
+  });
+  return recipes;
 }
 
 export function getRecipeById(recipeId) {
