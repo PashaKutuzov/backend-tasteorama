@@ -1,6 +1,8 @@
 import createHttpError from 'http-errors';
 import {
-  getMyRecipes,
+  createRecipes,
+  getAllRecipes,
+  // getUsersRecipeById,
   getRecipes,
   deleteRecipesById,
   patchRecipes,
@@ -44,7 +46,9 @@ export async function getRecipesByIdController(req, res) {
   if (recipe === null) {
     throw createHttpError(404, 'Not found');
   }
-
+  // if (recipe.userId.toString() !== userId.toString()) {
+  //   throw new createHttpError.Forbidden('Access denied for recipes');
+  // }
   res.json({
     status: 200,
     message: `Successfully found recipe with id ${recipeId}!`,
@@ -150,9 +154,6 @@ export async function deleteRecipesByIdController(req, res) {
 export async function getFavoriteRecipeController(req, res, next) {
   try {
     const userId = req.user._id;
-
-    // const recipes = await getFavoriteRecipes(userId);
-    // data: recipes,
 
     const user = await UsersCollection.findById(userId).populate('favorites');
 

@@ -18,16 +18,9 @@ servers:
     description: Local development server
 
 paths:
-  /search:
-    get:
-      $ref: '../swagger/paths/search/get.yaml'
   /recipes/{id}:
     get:
       $ref: ../swagger/paths/recipes/{id}/get.yaml
-    # patch:
-    #   $ref: ../swagger/paths/recipes/{id}/patch.yaml
-    # delete:
-    #   $ref: ../swagger/paths/recipes/{id}/delete.yaml
   /recipes:
     get:
       $ref: '../swagger/paths/recipes/get.yaml'
@@ -66,12 +59,6 @@ paths:
   /auth/logout:
     post:
       $ref: ../swagger/paths/auth/logout/post.yaml
-  # /auth/reset-pwd:
-  #   post:
-  #     $ref: ../swagger/paths/auth/reset-pwd/post.yaml
-  # /auth/send-reset-email:
-  #   post:
-  #     $ref: ../swagger/paths/auth/send-reset-email/post.yaml
 
 components:
   securitySchemes:

@@ -2,7 +2,6 @@ import express from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
-  // getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
@@ -23,7 +22,6 @@ import { recipeCreateSchema } from '../validation/recipe.js';
 
 const router = express.Router();
 
-// router.get('/recipes', ctrlWrapper(getAllRecipesController));
 router.get('/recipes', ctrlWrapper(searchRecipesController));
 
 router.get(
@@ -46,6 +44,7 @@ router.delete(
 );
 
 router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
+
 router.get(
   '/recipes/:recipeId',
   isValidId,
@@ -68,6 +67,7 @@ router.patch(
   validateBody(updateRecipeSchema),
   ctrlWrapper(patchRecipesController)
 );
+
 router.delete(
   '/recipes/:recipeId',
   authenticate,
