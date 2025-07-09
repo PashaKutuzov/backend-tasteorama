@@ -39,12 +39,6 @@ requestBody:
             type: string
             description: "The password for the user's account."
             example: '123Qwe!xX'
-          privacyPolicyAcceptedAt:
-            type: string
-            format: date-time
-            description: 'ISO 8601 timestamp when user accepted the privacy policy.'
-            example: '2025-06-28T12:00:00.000Z'
-
 responses:
   '200':
     description: |

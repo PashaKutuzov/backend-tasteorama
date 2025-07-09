@@ -7,7 +7,7 @@ security:
   - bearerAuth: []
 parameters:
   - in: path
-    name: id
+    name: recipeId
     required: true
     schema:
       type: string
@@ -50,7 +50,7 @@ responses:
               example: 404
             message:
               type: string
-              example: Recipes not found
+              example: Recipe not found
 
   '500':
     $ref: '../../../components/responses/500.yaml'
