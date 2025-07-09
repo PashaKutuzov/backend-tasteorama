@@ -76,10 +76,6 @@ export function getRecipeById(recipeId) {
   return recipeModel.findById({ _id: recipeId });
 }
 
-// export function getUsersRecipeById(recipeId, userId) {
-//   return recipeModel.findById({ _id: recipeId, userId });
-// }
-
 export function createRecipes(payload) {
   return recipeModel.create(payload);
 }

@@ -30,14 +30,101 @@
     }
   ],
   "paths": {
-    "/search": {
+    "/recipes/{id}": {
       "get": {
         "tags": [
           "Recipes"
         ],
-        "summary": "Search recipes",
-        "operationId": "searchRecipes",
-        "description": "Search recipes by title, category, or ingredient with pagination support",
+        "summary": "Get recipe by id",
+        "operationId": "getRecipeById",
+        "description": "Get recipe by id",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "65ca67e7ae7f10c88b598384"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get recipe by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully found recipe with id 65ca67e7ae7f10c88b598384!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/recipe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Recipe not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 404
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recipes not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/recipes": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Get list of Recipes",
+        "operationId": "getRecipes",
+        "description": "Get list of recipes with this endpoint",
         "security": [],
         "parameters": [
           {
@@ -225,545 +312,6 @@
                     "message": {
                       "type": "string",
                       "example": "No recipes found for the provided criteria."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/recipes/{id}": {
-      "get": {
-        "tags": [
-          "Recipes"
-        ],
-        "summary": "Get recipe by id",
-        "operationId": "getRecipeById",
-        "description": "Get recipe by id",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "65ca67e7ae7f10c88b598384"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get recipe by id",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully found recipe with id 65ca67e7ae7f10c88b598384!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "$ref": "#/components/schemas/recipe"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "description": "Recipe not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Recipes not found"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Recipes"
-        ],
-        "summary": "Update recipe",
-        "operationId": "updateRecipe",
-        "description": "Update recipe by ID",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "681b6a51254a7a7996d15746"
-            },
-            "description": "The unique identifier of the recipe to be updated."
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "title",
-                  "category",
-                  "instructions",
-                  "description",
-                  "ingredients"
-                ],
-                "properties": {
-                  "title": {
-                    "type": "string",
-                    "description": "The full name of the recipe",
-                    "example": "Breakfast Omelette"
-                  },
-                  "category": {
-                    "type": "string",
-                    "description": "The full name of the category",
-                    "enum": [
-                      "Seafood",
-                      "Lamb",
-                      "Starter",
-                      "Chicken",
-                      "Beef",
-                      "Dessert",
-                      "Vegan",
-                      "Pork",
-                      "Vegetarian",
-                      "Miscellaneous",
-                      "Pasta",
-                      "Breakfast",
-                      "Side",
-                      "Goat",
-                      "Soup"
-                    ],
-                    "example": "Breakfast"
-                  },
-                  "area": {
-                    "type": "string",
-                    "description": "The cuisine area (e.g. Italian, Mexican)",
-                    "example": "Italian"
-                  },
-                  "instructions": {
-                    "type": "string",
-                    "description": "Preparation steps",
-                    "example": "Crack the eggs and beat with a fork..."
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "Short description of the recipe",
-                    "example": "A light and fluffy omelette perfect for breakfast."
-                  },
-                  "thumb": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Optional recipe image file"
-                  },
-                  "time": {
-                    "type": "string",
-                    "description": "Time needed to prepare the recipe",
-                    "example": "30 min"
-                  },
-                  "cals": {
-                    "type": "number",
-                    "description": "Calories per portion",
-                    "example": 250
-                  },
-                  "ingredients": {
-                    "type": "array",
-                    "description": "List of ingredients with their measures",
-                    "minItems": 1,
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "id",
-                        "measure"
-                      ],
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "description": "Ingredient ID (MongoDB ObjectId)",
-                          "example": "64a1b2c3e25d8c90e88d5678"
-                        },
-                        "measure": {
-                          "type": "string",
-                          "description": "Quantity and unit of the ingredient",
-                          "example": "2 tbsp"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully updated recipe",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully patched a recipe!"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/recipe"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "description": "Recipe not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Recipe not found"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Recipes"
-        ],
-        "summary": "Delete recipe by id",
-        "operationId": "deleteContact",
-        "description": "Delete recipe by id",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "681b6a51254a7a7996d15746"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successfully deleted recipe. No content returned."
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "description": "Recipe not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Recipe not found"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/recipes": {
-      "get": {
-        "tags": [
-          "Recipes"
-        ],
-        "summary": "Get list of Recipes",
-        "operationId": "getRecipes",
-        "description": "Get list of recipes with this endpoint",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "example": 1
-            }
-          },
-          {
-            "in": "query",
-            "name": "perPage",
-            "schema": {
-              "type": "integer",
-              "example": 10
-            }
-          },
-          {
-            "in": "query",
-            "name": "sortBy",
-            "schema": {
-              "type": "string",
-              "example": "_id"
-            },
-            "description": "Sort by any recipe field. Default is `_id`."
-          },
-          {
-            "in": "query",
-            "name": "sortOrder",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "example": "asc"
-            }
-          },
-          {
-            "in": "query",
-            "name": "category",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "Seafood",
-                "Lamb",
-                "Starter",
-                "Chicken",
-                "Beef",
-                "Dessert",
-                "Vegan",
-                "Pork",
-                "Vegetarian",
-                "Miscellaneous",
-                "Pasta",
-                "Breakfast",
-                "Side",
-                "Goat",
-                "Soup"
-              ],
-              "example": "Breakfast"
-            },
-            "description": "Filter recipes by category."
-          },
-          {
-            "in": "query",
-            "name": "title",
-            "schema": {
-              "type": "string",
-              "example": "Breakfast Omelette"
-            },
-            "description": "Filter recipes by title (partial match)."
-          },
-          {
-            "in": "query",
-            "name": "ingredients",
-            "schema": {
-              "type": "string",
-              "example": "Pork"
-            },
-            "description": "Filter recipes by ingredient (partial match or comma-separated values)."
-          },
-          {
-            "in": "query",
-            "name": "description",
-            "schema": {
-              "type": "string",
-              "example": "A tasty chicken dish."
-            },
-            "description": "Filter recipes by description (partial match)."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully found recipes!",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 200
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully found recipes!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "required": [
-                        "data",
-                        "page",
-                        "perPage",
-                        "totalItems",
-                        "totalPages",
-                        "hasNextPage",
-                        "hasPreviousPage"
-                      ],
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/recipe"
-                          }
-                        },
-                        "page": {
-                          "type": "integer",
-                          "example": 2
-                        },
-                        "perPage": {
-                          "type": "integer",
-                          "example": 4
-                        },
-                        "totalItems": {
-                          "type": "integer",
-                          "example": 4
-                        },
-                        "totalPages": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "hasNextPage": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "hasPreviousPage": {
-                          "type": "boolean",
-                          "example": true
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "description": "Recipes not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Recipes not found"
                     }
                   }
                 }

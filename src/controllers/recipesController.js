@@ -1,15 +1,11 @@
 import createHttpError from 'http-errors';
 import {
-  createRecipes,
   getAllRecipes,
-  // getUsersRecipeById,
   getRecipes,
-  // getRecipeById,
   deleteRecipesById,
   patchRecipes,
   addFavoriteRecipe,
   deleteFavoriteRecipe,
-  getFavoriteRecipes,
   getRecipeById,
 } from '../services/recipesServices.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
@@ -48,9 +44,6 @@ export async function getRecipesByIdController(req, res) {
   if (recipe === null) {
     throw createHttpError(404, 'Not found');
   }
-  // if (recipe.userId.toString() !== userId.toString()) {
-  //   throw new createHttpError.Forbidden('Access denied for recipes');
-  // }
   res.json({
     status: 200,
     message: `Successfully found recipe with id ${recipeId}!`,
@@ -78,24 +71,6 @@ export async function getRecipesController(req, res) {
     data: recipes,
   });
 }
-
-// export async function getUsersRecipesByIdController(req, res) {
-//   const { recipeId } = req.params;
-//   const userId = req.user._id;
-//   const recipe = await getUsersRecipeById(recipeId, userId);
-
-//   if (recipe === null) {
-//     throw createHttpError(404, 'Not found');
-//   }
-//   // if (recipe.userId.toString() !== userId.toString()) {
-//   //   throw new createHttpError.Forbidden('Access denied for recipes');
-//   // }
-//   res.json({
-//     status: 200,
-//     message: `Successfully found recipe with id ${recipeId}!`,
-//     data: recipe,
-//   });
-// }
 
 export async function createrecipesController(req, res, next) {
   try {
@@ -184,9 +159,6 @@ export async function getFavoriteRecipeController(req, res, next) {
   try {
     const userId = req.user._id;
 
-    // const recipes = await getFavoriteRecipes(userId);
-    // data: recipes,
-
     const user = await UsersCollection.findById(userId).populate('favorites');
 
     if (!user) {
@@ -217,10 +189,6 @@ export async function addFavoriteRecipeController(req, res, next) {
     }
 
     const user = await addFavoriteRecipe(userId, recipeId);
-
-    // if (!user) {
-    //   throw createHttpError(404, 'Recipe not found or access denied');
-    // }
 
     res.status(201).json({ message: 'Recipe added to favorites', data: user });
   } catch (error) {

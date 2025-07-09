@@ -3,35 +3,14 @@ tags:
 summary: Get list of Recipes
 operationId: getRecipes
 description: Get list of recipes with this endpoint
-security:
-  - bearerAuth: []
-
+security: []
 parameters:
   - in: query
-    name: page
-    schema:
-      type: integer
-      example: 1
-
-  - in: query
-    name: perPage
-    schema:
-      type: integer
-      example: 10
-
-  - in: query
-    name: sortBy
+    name: title
     schema:
       type: string
-      example: _id
-    description: Sort by any recipe field. Default is `_id`.
-
-  - in: query
-    name: sortOrder
-    schema:
-      type: string
-      enum: [asc, desc]
-      example: asc
+      example: Cake
+    description: Partial match in recipe title
 
   - in: query
     name: category
@@ -53,33 +32,42 @@ parameters:
         - Side
         - Goat
         - Soup
-      example: Breakfast
-    description: Filter recipes by category.
+      example: Dessert
+    description: Exact category match
 
   - in: query
-    name: title
+    name: ingredient
     schema:
       type: string
-      example: Breakfast Omelette
-    description: Filter recipes by title (partial match).
+      enum:
+        - Egg
+        - Pears
+        - Spring Onions
+        - Minced Beef
+        - Powdered Sugar
+        - Jalapeno
+        - Madras Paste
+        - Noodles
+      example: Egg
+    description: Ingredient name to match (partial match allowed)
 
   - in: query
-    name: ingredients
+    name: page
     schema:
-      type: string
-      example: Pork
-    description: Filter recipes by ingredient (partial match or comma-separated values).
+      type: integer
+      example: 1
+    description: Page number (default is 1)
 
   - in: query
-    name: description
+    name: limit
     schema:
-      type: string
-      example: A tasty chicken dish.
-    description: Filter recipes by description (partial match).
+      type: integer
+      example: 12
+    description: Number of results per page (default is 10)
 
 responses:
   '200':
-    description: Successfully found recipes!
+    description: Recipes found successfully
     content:
       application/json:
         schema:
@@ -94,11 +82,11 @@ responses:
               example: 200
             message:
               type: string
-              example: Successfully found recipes!
+              example: Recipes retrieved successfully
             data:
               type: object
               required:
-                - data
+                - recipes
                 - page
                 - perPage
                 - totalItems
@@ -106,34 +94,48 @@ responses:
                 - hasNextPage
                 - hasPreviousPage
               properties:
-                data:
+                recipes:
                   type: array
                   items:
                     $ref: '../../components/schemas/recipe.yaml'
                 page:
                   type: integer
-                  example: 2
+                  example: 1
                 perPage:
                   type: integer
-                  example: 4
+                  example: 10
                 totalItems:
                   type: integer
-                  example: 4
+                  example: 40
                 totalPages:
                   type: integer
-                  example: 1
+                  example: 4
                 hasNextPage:
                   type: boolean
-                  example: false
+                  example: true
                 hasPreviousPage:
                   type: boolean
-                  example: true
+                  example: false
 
-  '401':
-    $ref: '../../components/responses/401.yaml'
+  '400':
+    description: Bad Request - Invalid query parameters
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: Invalid query parameters. Please check the title, category, or ingredient fields.
 
   '404':
-    description: Recipes not found
+    description: Not Found - No recipes match the given criteria
     content:
       application/json:
         schema:
@@ -147,7 +149,7 @@ responses:
               example: 404
             message:
               type: string
-              example: Recipes not found
+              example: No recipes found for the provided criteria.
 
   '500':
-    $ref: '../../components/responses/500.yaml'
+    $ref: ../../components/responses/500.yaml
