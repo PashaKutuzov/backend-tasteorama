@@ -19,6 +19,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'https://frontend-tasteorama.vercel.app',
+  'https://backend-tasteorama.onrender.com/api-docs',
 ];
 
 app.use(
@@ -39,6 +40,7 @@ app.use(
 export default async function setupServer() {
   app.use(cookieParser());
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   if (process.env.NODE_ENV !== 'development') {
     app.use(

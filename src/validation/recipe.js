@@ -1,3 +1,6 @@
+import Joi from 'joi';
+import { Categories } from '../models/categories.js';
+
 export const updateRecipeSchema = Joi.object({
   title: Joi.string().min(1).max(64),
   cals: Joi.string().min(1).max(10000),
@@ -25,17 +28,6 @@ export const updateRecipeSchema = Joi.object({
     'Soup'
   ),
 });
-
-// import mongoose from 'mongoose';
-import Joi from 'joi';
-import { Categories } from '../models/categories.js';
-
-// const objectIdValidator = Joi.string().custom((value, helpers) => {
-//   if (!mongoose.Types.ObjectId.isValid(value)) {
-//     return helpers.error('any.invalid');
-//   }
-//   return value;
-// }, 'ObjectId validation');
 
 const categoryValidator = Joi.string().custom(async (value, helpers) => {
   const allowedCategories = await getAllowedCategories();
@@ -69,5 +61,4 @@ export const recipeCreateSchema = Joi.object({
   ingredient: Joi.array().items(ingredientSchema).min(2).max(16).required(),
   instruction: Joi.string().max(1200).required(),
   recipeImg: Joi.any().optional(),
-  // owner: objectIdValidator.optional(),
 });

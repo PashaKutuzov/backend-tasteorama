@@ -18,9 +18,9 @@ servers:
     description: Local development server
 
 paths:
-  /recipes/{id}:
+  /recipes/{recipeId}:
     get:
-      $ref: ../swagger/paths/recipes/{id}/get.yaml
+      $ref: '../swagger/paths/recipes/{recipeId}/get.yaml'
   /recipes:
     get:
       $ref: '../swagger/paths/recipes/get.yaml'

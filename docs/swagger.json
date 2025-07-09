@@ -30,7 +30,7 @@
     }
   ],
   "paths": {
-    "/recipes/{id}": {
+    "/recipes/{recipeId}": {
       "get": {
         "tags": [
           "Recipes"
@@ -46,7 +46,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "id",
+            "name": "recipeId",
             "required": true,
             "schema": {
               "type": "string",
@@ -104,7 +104,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Recipes not found"
+                      "example": "Recipe not found"
                     }
                   }
                 }
@@ -329,7 +329,7 @@
         ],
         "summary": "Create a new recipe",
         "operationId": "createRecipe",
-        "description": "Create a new recipe",
+        "description": "Create a new recipe. Requires authentication.",
         "security": [
           {
             "bearerAuth": []
@@ -345,7 +345,6 @@
                   "name",
                   "category",
                   "ingredient",
-                  "ingredientAmount",
                   "instruction",
                   "decr",
                   "cookiesTime"
@@ -357,25 +356,27 @@
                     "maxLength": 64,
                     "example": "Chocolate Cake"
                   },
+                  "decr": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "example": "A rich chocolate cake with cream"
+                  },
+                  "cookiesTime": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 360,
+                    "example": 45
+                  },
+                  "cals": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000,
+                    "example": 350
+                  },
                   "category": {
                     "type": "string",
-                    "enum": [
-                      "Seafood",
-                      "Lamb",
-                      "Starter",
-                      "Chicken",
-                      "Beef",
-                      "Dessert",
-                      "Vegan",
-                      "Pork",
-                      "Vegetarian",
-                      "Miscellaneous",
-                      "Pasta",
-                      "Breakfast",
-                      "Side",
-                      "Goat",
-                      "Soup"
-                    ],
+                    "description": "Category must exist in the categories collection.",
                     "example": "Dessert"
                   },
                   "area": {
@@ -384,23 +385,28 @@
                     "maxLength": 100,
                     "example": "Italian"
                   },
-                  "decr": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 200,
-                    "example": "A rich chocolate cake with cream"
-                  },
-                  "cookiesTime": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 360,
-                    "example": 45
-                  },
-                  "cals": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 10000,
-                    "example": 350
+                  "ingredient": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 16,
+                    "description": "List of ingredients with measures.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "name",
+                        "measure"
+                      ],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "Flour"
+                        },
+                        "measure": {
+                          "type": "string",
+                          "example": "300g"
+                        }
+                      }
+                    }
                   },
                   "instruction": {
                     "type": "string",
@@ -411,38 +417,7 @@
                   "thumb": {
                     "type": "string",
                     "format": "binary",
-                    "description": "Recipe image file (optional, max size 2MB)"
-                  },
-                  "owner": {
-                    "type": "string",
-                    "description": "ID of the user (optional)",
-                    "example": "685e469e90ec1af79417e1e0"
-                  },
-                  "ingredient": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "minItems": 1,
-                    "description": "A list of ingredients for the recipe.",
-                    "example": [
-                      "Flour",
-                      "Sugar",
-                      "Butter"
-                    ]
-                  },
-                  "ingredientAmount": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "minItems": 2,
-                    "maxItems": 16,
-                    "description": "A list of corresponding amounts for each ingredient.",
-                    "example": [
-                      "300g",
-                      "2 pcs"
-                    ]
+                    "description": "Optional recipe image file (max 2MB)"
                   }
                 }
               }
@@ -471,39 +446,95 @@
                       "example": "Successfully created a recipe!"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/recipe"
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "686a93dd70a76a8fd13cc748"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Chocolate Cake"
+                        },
+                        "decr": {
+                          "type": "string",
+                          "example": "A rich chocolate cake with cream"
+                        },
+                        "cookiesTime": {
+                          "type": "integer",
+                          "example": 45
+                        },
+                        "cals": {
+                          "type": "integer",
+                          "example": 350
+                        },
+                        "category": {
+                          "type": "string",
+                          "example": "Dessert"
+                        },
+                        "area": {
+                          "type": "string",
+                          "example": "Italian"
+                        },
+                        "instruction": {
+                          "type": "string",
+                          "example": "Mix everything and bake at 180°C for 40 min"
+                        },
+                        "thumb": {
+                          "type": "string",
+                          "example": "https://res.cloudinary.com/example/image.jpg"
+                        },
+                        "ingredients": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "640c2dd963a319ea671e367e"
+                              },
+                              "measure": {
+                                "type": "string",
+                                "example": "300g"
+                              }
+                            }
+                          }
+                        },
+                        "owner": {
+                          "type": "string",
+                          "example": "685e469e90ec1af79417e1e0"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-07-06T15:18:53.977Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-07-06T15:18:53.977Z"
+                        }
+                      }
                     }
                   }
-                },
-                "examples": {
-                  "example": {
-                    "summary": "Recipe created",
-                    "value": {
-                      "status": 201,
-                      "message": "Successfully created a recipe!",
-                      "data": {
-                        "title": "Cake",
-                        "category": "Dessert",
-                        "instructions": "Follow steps...",
-                        "description": "A rich chocolate cake with cream",
-                        "thumb": "https://res.cloudinary.com/drxvkqgab/image/upload/v1751815133/azuzlwauesqx75yu7zog.jpg",
-                        "time": "60",
-                        "cals": 300,
-                        "ingredients": [
-                          {
-                            "id": "640c2dd963a319ea671e367e",
-                            "measure": "300g"
-                          },
-                          {
-                            "id": "640c2dd963a319ea671e3687",
-                            "measure": "2 pcs"
-                          }
-                        ],
-                        "owner": "685e469e90ec1af79417e1e0",
-                        "_id": "686a93dd70a76a8fd13cc748",
-                        "createdAt": "2025-07-06T15:18:53.977Z",
-                        "updatedAt": "2025-07-06T15:18:53.977Z"
-                      }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (e.g., ingredient not array)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "\"ingredient\" must be an array"
                     }
                   }
                 }
@@ -524,104 +555,12 @@
         "tags": [
           "Recipes"
         ],
-        "summary": "Get list of user's recipes",
+        "summary": "Get user's recipes",
         "operationId": "getUserRecipes",
-        "description": "Get list of recipes created by the authenticated user",
+        "description": "Get list of recipes created by the authenticated user.",
         "security": [
           {
             "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "page",
-            "schema": {
-              "type": "integer",
-              "example": 1
-            }
-          },
-          {
-            "in": "query",
-            "name": "perPage",
-            "schema": {
-              "type": "integer",
-              "example": 10
-            }
-          },
-          {
-            "in": "query",
-            "name": "sortBy",
-            "schema": {
-              "type": "string",
-              "example": "_id"
-            },
-            "description": "All recipe fields can be used. Default is `_id`."
-          },
-          {
-            "in": "query",
-            "name": "sortOrder",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "example": "asc"
-            }
-          },
-          {
-            "in": "query",
-            "name": "category",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "Seafood",
-                "Lamb",
-                "Starter",
-                "Chicken",
-                "Beef",
-                "Dessert",
-                "Vegan",
-                "Pork",
-                "Vegetarian",
-                "Miscellaneous",
-                "Pasta",
-                "Breakfast",
-                "Side",
-                "Goat",
-                "Soup"
-              ],
-              "example": "Breakfast"
-            },
-            "description": "Filter recipes by category."
-          },
-          {
-            "in": "query",
-            "name": "title",
-            "schema": {
-              "type": "string",
-              "example": "BreakFest"
-            },
-            "description": "Filter recipes by title."
-          },
-          {
-            "in": "query",
-            "name": "ingredients",
-            "schema": {
-              "type": "string",
-              "example": "Pork"
-            },
-            "description": "Filter recipes by ingredient (single value or comma-separated list)."
-          },
-          {
-            "in": "query",
-            "name": "description",
-            "schema": {
-              "type": "string",
-              "example": "A tasty chicken dish."
-            },
-            "description": "Filter recipes by description."
           }
         ],
         "responses": {
@@ -643,50 +582,12 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully found user's recipes!"
+                      "example": "Successfully found recipes!"
                     },
                     "data": {
-                      "type": "object",
-                      "required": [
-                        "data",
-                        "page",
-                        "perPage",
-                        "totalItems",
-                        "totalPages",
-                        "hasNextPage",
-                        "hasPreviousPage"
-                      ],
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/recipe"
-                          }
-                        },
-                        "page": {
-                          "type": "number",
-                          "example": 2
-                        },
-                        "perPage": {
-                          "type": "number",
-                          "example": 4
-                        },
-                        "totalItems": {
-                          "type": "number",
-                          "example": 4
-                        },
-                        "totalPages": {
-                          "type": "number",
-                          "example": 1
-                        },
-                        "hasNextPage": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "hasPreviousPage": {
-                          "type": "boolean",
-                          "example": true
-                        }
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/recipe"
                       }
                     }
                   }
@@ -696,30 +597,6 @@
           },
           "401": {
             "$ref": "#/components/responses/401"
-          },
-          "404": {
-            "description": "Recipes not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 404
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Recipes not found"
-                    }
-                  }
-                }
-              }
-            }
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -1296,10 +1173,9 @@
                     "example": "123Qwe!xX"
                   },
                   "privacyPolicyAcceptedAt": {
-                    "type": "string",
-                    "format": "date-time",
-                    "description": "ISO 8601 timestamp when user accepted the privacy policy.",
-                    "example": "2025-06-28T12:00:00.000Z"
+                    "type": "boolean",
+                    "description": "User accepted privacy policy (true/false).",
+                    "example": true
                   }
                 }
               }
@@ -1344,12 +1220,6 @@
                     "type": "string",
                     "description": "The password for the user's account.",
                     "example": "123Qwe!xX"
-                  },
-                  "privacyPolicyAcceptedAt": {
-                    "type": "string",
-                    "format": "date-time",
-                    "description": "ISO 8601 timestamp when user accepted the privacy policy.",
-                    "example": "2025-06-28T12:00:00.000Z"
                   }
                 }
               }
