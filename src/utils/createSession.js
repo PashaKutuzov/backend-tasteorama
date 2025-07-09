@@ -1,5 +1,5 @@
 import { SessionsCollection } from '../models/sessionModel.js';
-import { FIFTEEN_MINUTES, ONE_DAY } from '../constants/index.js';
+import { ONE_DAY } from '../constants/index.js';
 
 export const createSession = async (userId, accessToken, refreshToken) => {
   const now = Date.now();
@@ -10,7 +10,7 @@ export const createSession = async (userId, accessToken, refreshToken) => {
     userId,
     accessToken,
     refreshToken,
-    accessTokenValidUntil: new Date(now + FIFTEEN_MINUTES),
+    accessTokenValidUntil: new Date(now + ONE_DAY),
     refreshTokenValidUntil: new Date(now + ONE_DAY),
   });
 

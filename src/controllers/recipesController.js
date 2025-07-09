@@ -1,6 +1,8 @@
 import createHttpError from 'http-errors';
 import {
+  createRecipes,
   getAllRecipes,
+  // getUsersRecipeById,
   getRecipes,
   deleteRecipesById,
   patchRecipes,
@@ -44,6 +46,9 @@ export async function getRecipesByIdController(req, res) {
   if (recipe === null) {
     throw createHttpError(404, 'Not found');
   }
+  // if (recipe.userId.toString() !== userId.toString()) {
+  //   throw new createHttpError.Forbidden('Access denied for recipes');
+  // }
   res.json({
     status: 200,
     message: `Successfully found recipe with id ${recipeId}!`,
@@ -52,19 +57,7 @@ export async function getRecipesByIdController(req, res) {
 }
 
 export async function getRecipesController(req, res) {
-  const { page, perPage } = parsePaginationParams(req.query);
-  const { sortBy, sortOrder } = parseSortParams(req.query);
-  const filter = parseFilterParams(req.query);
-  const userId = req.user._id;
-
-  const recipes = await getAllRecipes({
-    page,
-    perPage,
-    userId,
-    sortBy,
-    sortOrder,
-    filter,
-  });
+  const recipes = await getMyRecipes(req.user);
   res.json({
     status: 200,
     message: 'Successfully found recipes!',
@@ -101,7 +94,10 @@ export async function createrecipesController(req, res, next) {
     recipeData.owner = user._id;
 
     const recipe = await recipeModel.create(recipeData);
-
+    await UsersCollection.findByIdAndUpdate(
+      { _id: user._id },
+      { myRecipes: [...user.myRecipes, recipe] }
+    );
     res.status(201).json({
       status: 201,
       message: 'Successfully created a recipe!',
@@ -199,7 +195,7 @@ export async function addFavoriteRecipeController(req, res, next) {
 export async function deleteFavoriteRecipeController(req, res, next) {
   const userId = req.user._id;
 
-  const { id: recipeId } = req.params;
+  const { recipeId } = req.params;
   const user = await deleteFavoriteRecipe(userId, recipeId);
   if (!user) {
     throw createHttpError(404, 'Recipe not found or access denied');

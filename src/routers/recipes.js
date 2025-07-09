@@ -2,7 +2,6 @@ import express from 'express';
 import ctrlWrapper from '../utils/ctrlWrapper.js';
 import {
   getRecipesController,
-  getAllRecipesController,
   createrecipesController,
   deleteRecipesByIdController,
   patchRecipesController,
@@ -22,9 +21,8 @@ import { parseIngredientsMiddleware } from '../utils/parseIngredientsMiddleware.
 import { recipeCreateSchema } from '../validation/recipe.js';
 
 const router = express.Router();
-const jsonParser = express.json();
 
-router.get('/search', ctrlWrapper(searchRecipesController));
+router.get('/recipes', ctrlWrapper(searchRecipesController));
 
 router.get(
   '/recipes/favorite',
@@ -35,21 +33,23 @@ router.get(
 router.post(
   '/recipes/favorite',
   authenticate,
-  jsonParser,
   ctrlWrapper(addFavoriteRecipeController)
 );
 
 router.delete(
-  '/recipes/favorite/:id',
+  '/recipes/favorite/:recipeId',
   authenticate,
   isValidId,
   ctrlWrapper(deleteFavoriteRecipeController)
 );
 
-router.get('/recipes', ctrlWrapper(getAllRecipesController));
-
 router.get('/recipes/user', authenticate, ctrlWrapper(getRecipesController));
-router.get('/recipes/:recipeId', ctrlWrapper(getRecipesByIdController));
+
+router.get(
+  '/recipes/:recipeId',
+  isValidId,
+  ctrlWrapper(getRecipesByIdController)
+);
 
 router.post(
   '/recipes',

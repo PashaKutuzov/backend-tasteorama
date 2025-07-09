@@ -4,49 +4,46 @@ import {
   logoutUser,
   refreshUsersSession,
 } from '../services/authServices.js';
-import { ONE_DAY } from '../constants/index.js';
-import createHttpError from 'http-errors';
-import { FIFTEEN_MINUTES } from '../constants/index.js';
 
-const setupSession = (res, session, maxAge = ONE_DAY) => {
+import createHttpError from 'http-errors';
+
+const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    expires: new Date(Date.now() + maxAge),
+    expiresIn: session.refreshTokenValidUntil,
   });
   res.cookie('sessionId', session._id.toString(), {
     httpOnly: true,
-    expires: new Date(Date.now() + maxAge),
+    expiresIn: session.refreshTokenValidUntil,
   });
 };
 
 export const registerUserController = async (req, res) => {
-  const user = await registerUser(req.body);
+  await registerUser(req.body);
   const session = await loginUser(req.body);
-  console.log(user);
 
   setupSession(res, session);
   res.status(201).json({
     status: 201,
     message: `User created successfully`,
-    data: { accessToken: session.accessToken },
+    data: {
+      accessToken: session.accessToken,
+      expiresIn: session.accessTokenValidUntil,
+    },
   });
 };
-
-const maxAge = FIFTEEN_MINUTES;
 
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
 
   setupSession(res, session);
 
-  const expiresIn = new Date(Date.now() + maxAge);
-
   res.json({
     status: 200,
     message: 'Login successfully',
     data: {
       accessToken: session.accessToken,
-      expiresIn: expiresIn,
+      expiresIn: session.accessTokenValidUntil,
     },
   });
 };
@@ -73,14 +70,13 @@ export const refreshUserSessionController = async (req, res) => {
   const session = await refreshUsersSession({ sessionId, refreshToken });
 
   setupSession(res, session);
-  const expiresIn = new Date(Date.now() + maxAge);
 
   res.json({
     status: 200,
     message: 'Successfully refreshed a session!',
     data: {
       accessToken: session.accessToken,
-      expiresIn: expiresIn,
+      expiresIn: session.accessTokenValidUntil,
     },
   });
 };

@@ -38,19 +38,20 @@ app.use(
 
 export default async function setupServer() {
   app.use(cookieParser());
-
-  app.use('/uploads', express.static(UPLOAD_DIR));
-  app.use('/api-docs', swaggerDocs());
   app.use(express.json());
 
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    })
-  );
+  if (process.env.NODE_ENV !== 'development') {
+    app.use(
+      pino({
+        transport: {
+          target: 'pino-pretty',
+        },
+      })
+    );
+  }
 
+  app.use('/api-docs', swaggerDocs());
+  app.use('/uploads', express.static(UPLOAD_DIR));
   app.use('/api/auth', authRouter);
   app.use('/api/users', userRoutes);
   app.use('/api', recipesRouter);
