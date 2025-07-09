@@ -1,8 +1,6 @@
 import createHttpError from 'http-errors';
 import {
-  createRecipes,
-  getAllRecipes,
-  // getUsersRecipeById,
+  getMyRecipes,
   getRecipes,
   deleteRecipesById,
   patchRecipes,
@@ -46,9 +44,6 @@ export async function getRecipesByIdController(req, res) {
   if (recipe === null) {
     throw createHttpError(404, 'Not found');
   }
-  // if (recipe.userId.toString() !== userId.toString()) {
-  //   throw new createHttpError.Forbidden('Access denied for recipes');
-  // }
   res.json({
     status: 200,
     message: `Successfully found recipe with id ${recipeId}!`,
