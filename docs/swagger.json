@@ -202,7 +202,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Recipes found successfully",
+            "description": "Successfully found all recipes!",
             "content": {
               "application/json": {
                 "schema": {
@@ -219,7 +219,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Recipes retrieved successfully"
+                      "example": "Successfully found all recipes!"
                     },
                     "data": {
                       "type": "object",
@@ -228,16 +228,13 @@
                         "page",
                         "perPage",
                         "totalItems",
-                        "totalPages",
-                        "hasNextPage",
-                        "hasPreviousPage"
+                        "totalPages"
                       ],
                       "properties": {
                         "recipes": {
                           "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/recipe"
-                          }
+                          "items": null,
+                          "$ref": "#/components/schemas/recipe"
                         },
                         "page": {
                           "type": "integer",
@@ -245,23 +242,15 @@
                         },
                         "perPage": {
                           "type": "integer",
-                          "example": 10
+                          "example": 12
                         },
                         "totalItems": {
                           "type": "integer",
-                          "example": 40
+                          "example": 35
                         },
                         "totalPages": {
                           "type": "integer",
-                          "example": 4
-                        },
-                        "hasNextPage": {
-                          "type": "boolean",
-                          "example": true
-                        },
-                        "hasPreviousPage": {
-                          "type": "boolean",
-                          "example": false
+                          "example": 3
                         }
                       }
                     }
@@ -452,19 +441,19 @@
                           "type": "string",
                           "example": "686a93dd70a76a8fd13cc748"
                         },
-                        "name": {
+                        "title": {
                           "type": "string",
                           "example": "Chocolate Cake"
                         },
-                        "decr": {
+                        "description": {
                           "type": "string",
                           "example": "A rich chocolate cake with cream"
                         },
-                        "cookiesTime": {
+                        "time": {
                           "type": "integer",
                           "example": 45
                         },
-                        "cals": {
+                        "calories": {
                           "type": "integer",
                           "example": 350
                         },
@@ -1147,14 +1136,14 @@
         "security": [],
         "requestBody": {
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "required": [
                   "name",
                   "email",
                   "password",
-                  "privacyPolicyAcceptedAt"
+                  "privacyPolicyAccepted"
                 ],
                 "properties": {
                   "name": {
@@ -1172,7 +1161,7 @@
                     "description": "The user's password.",
                     "example": "123Qwe!xX"
                   },
-                  "privacyPolicyAcceptedAt": {
+                  "privacyPolicyAccepted": {
                     "type": "boolean",
                     "description": "User accepted privacy policy (true/false).",
                     "example": true
@@ -1184,7 +1173,41 @@
         },
         "responses": {
           "201": {
-            "$ref": "#/components/responses/201"
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "required": [
+                        "accessToken"
+                      ],
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "example": "bIHHDtBrjM3x61fcXQWrBiB0vvA/Fu0Z25YLbpAm"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "409": {
             "$ref": "#/components/responses/409"
@@ -1203,7 +1226,7 @@
         "security": [],
         "requestBody": {
           "content": {
-            "application/x-www-form-urlencoded": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "required": [
@@ -1246,7 +1269,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully logged in!",
+                      "example": "Login successfully!",
                       "description": "Confirmation message indicating successful login"
                     },
                     "data": {
@@ -1522,59 +1545,6 @@
       }
     },
     "responses": {
-      "201": {
-        "description": "Created",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 201
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Successfully registered a user!"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "_id",
-                    "name",
-                    "email",
-                    "privacyPolicyAcceptedAt"
-                  ],
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "example": "66cf9e011ecc457ea69ab77d"
-                    },
-                    "name": {
-                      "type": "string",
-                      "example": "User One"
-                    },
-                    "email": {
-                      "type": "string",
-                      "example": "userone@mail.com"
-                    },
-                    "privacyPolicyAcceptedAt": {
-                      "type": "string",
-                      "format": "date-time",
-                      "example": "2025-06-28T12:00:00.000Z"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "401": {
         "description": "Unauthorized error",
         "content": {

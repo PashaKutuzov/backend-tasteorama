@@ -108,16 +108,16 @@ responses:
                 _id:
                   type: string
                   example: 686a93dd70a76a8fd13cc748
-                name:
+                title:
                   type: string
                   example: Chocolate Cake
-                decr:
+                description:
                   type: string
                   example: A rich chocolate cake with cream
-                cookiesTime:
+                time:
                   type: integer
                   example: 45
-                cals:
+                calories:
                   type: integer
                   example: 350
                 category:

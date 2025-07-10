@@ -29,14 +29,14 @@ description: |
 security: []
 requestBody:
   content:
-    application/x-www-form-urlencoded:
+    application/json:
       schema:
         type: object
         required:
           - name
           - email
           - password
-          - privacyPolicyAcceptedAt
+          - privacyPolicyAccepted
         properties:
           name:
             type: string
@@ -50,13 +50,36 @@ requestBody:
             type: string
             description: "The user's password."
             example: '123Qwe!xX'
-          privacyPolicyAcceptedAt:
+          privacyPolicyAccepted:
             type: boolean
             description: 'User accepted privacy policy (true/false).'
             example: true
 
 responses:
   '201':
-    $ref: '../../../components/responses/201.yaml'
+    description: User created successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'User created successfully'
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  example: 'bIHHDtBrjM3x61fcXQWrBiB0vvA/Fu0Z25YLbpAm'
   '409':
     $ref: '../../../components/responses/409.yaml'
