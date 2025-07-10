@@ -12,9 +12,9 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  - url: https://backend-tasteorama.onrender.com
+  - url: https://backend-tasteorama.onrender.com/api
     description: Production server
-  - url: http://127.0.0.1:8080
+  - url: http://127.0.0.1:8080/api
     description: Local development server
 
 paths:
