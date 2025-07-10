@@ -95,7 +95,7 @@ responses:
                 recipes:
                   type: array
                   items:
-                  $ref: '../../components/schemas/recipe.yaml'
+                  $ref: ../../components/schemas/recipeResponse.yaml
                 page:
                   type: integer
                   example: 1

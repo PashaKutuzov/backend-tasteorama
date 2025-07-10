@@ -77,7 +77,7 @@
                     },
                     "data": {
                       "type": "object",
-                      "$ref": "#/components/schemas/recipe"
+                      "$ref": "#/components/schemas/recipeResponse"
                     }
                   }
                 }
@@ -234,7 +234,7 @@
                         "recipes": {
                           "type": "array",
                           "items": null,
-                          "$ref": "#/components/schemas/recipe"
+                          "$ref": "#/components/schemas/recipeResponse"
                         },
                         "page": {
                           "type": "integer",
@@ -313,12 +313,11 @@
         }
       },
       "post": {
+        "operationId": "createRecipe",
+        "summary": "Create a new recipe",
         "tags": [
           "Recipes"
         ],
-        "summary": "Create a new recipe",
-        "operationId": "createRecipe",
-        "description": "Create a new recipe. Requires authentication.",
         "security": [
           {
             "bearerAuth": []
@@ -329,183 +328,18 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "required": [
-                  "name",
-                  "category",
-                  "ingredient",
-                  "instruction",
-                  "decr",
-                  "cookiesTime"
-                ],
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 64,
-                    "example": "Chocolate Cake"
-                  },
-                  "decr": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 200,
-                    "example": "A rich chocolate cake with cream"
-                  },
-                  "cookiesTime": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 360,
-                    "example": 45
-                  },
-                  "cals": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "maximum": 10000,
-                    "example": 350
-                  },
-                  "category": {
-                    "type": "string",
-                    "description": "Category must exist in the categories collection.",
-                    "example": "Dessert"
-                  },
-                  "area": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 100,
-                    "example": "Italian"
-                  },
-                  "ingredient": {
-                    "type": "array",
-                    "minItems": 2,
-                    "maxItems": 16,
-                    "description": "List of ingredients with measures.",
-                    "items": {
-                      "type": "object",
-                      "required": [
-                        "name",
-                        "measure"
-                      ],
-                      "properties": {
-                        "name": {
-                          "type": "string",
-                          "example": "Flour"
-                        },
-                        "measure": {
-                          "type": "string",
-                          "example": "300g"
-                        }
-                      }
-                    }
-                  },
-                  "instruction": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 1200,
-                    "example": "Mix everything and bake at 180°C for 40 min"
-                  },
-                  "thumb": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "Optional recipe image file (max 2MB)"
-                  }
-                }
+                "$ref": "#/components/schemas/recipeCreateRequest"
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Successfully created a recipe",
+            "description": "Recipe successfully created",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "example": 201
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Successfully created a recipe!"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "_id": {
-                          "type": "string",
-                          "example": "686a93dd70a76a8fd13cc748"
-                        },
-                        "title": {
-                          "type": "string",
-                          "example": "Chocolate Cake"
-                        },
-                        "description": {
-                          "type": "string",
-                          "example": "A rich chocolate cake with cream"
-                        },
-                        "time": {
-                          "type": "integer",
-                          "example": 45
-                        },
-                        "calories": {
-                          "type": "integer",
-                          "example": 350
-                        },
-                        "category": {
-                          "type": "string",
-                          "example": "Dessert"
-                        },
-                        "area": {
-                          "type": "string",
-                          "example": "Italian"
-                        },
-                        "instruction": {
-                          "type": "string",
-                          "example": "Mix everything and bake at 180°C for 40 min"
-                        },
-                        "thumb": {
-                          "type": "string",
-                          "example": "https://res.cloudinary.com/example/image.jpg"
-                        },
-                        "ingredients": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string",
-                                "example": "640c2dd963a319ea671e367e"
-                              },
-                              "measure": {
-                                "type": "string",
-                                "example": "300g"
-                              }
-                            }
-                          }
-                        },
-                        "owner": {
-                          "type": "string",
-                          "example": "685e469e90ec1af79417e1e0"
-                        },
-                        "createdAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2025-07-06T15:18:53.977Z"
-                        },
-                        "updatedAt": {
-                          "type": "string",
-                          "format": "date-time",
-                          "example": "2025-07-06T15:18:53.977Z"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/recipeResponse"
                 }
               }
             }
@@ -576,7 +410,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/recipe"
+                        "$ref": "#/components/schemas/recipeResponse"
                       }
                     }
                   }
@@ -630,7 +464,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/recipe"
+                        "$ref": "#/components/schemas/recipeResponse"
                       }
                     }
                   }
@@ -1222,7 +1056,7 @@
         ],
         "summary": "User Login",
         "operationId": "loginUser",
-        "description": "**User Login**\n\nThis endpoint allows registered users to log in to their account by providing their email and password.\n\n### Required Fields\n- **Email**: The email address associated with the user's account.\n- **Password**: The password for the user's account.\n- **Privacy Policy Accepted At**: ISO 8601 date-time string indicating when user accepted the privacy policy.\n\n### How to Use\n- **Email**: Enter the email address used during registration.\n- **Password**: Provide the password associated with the email address.\n- **Privacy Policy Accepted At**: Usually sent during registration, but may be required in specific flows.\n\nUpon successful login, the response will include an access token that can be used to authenticate further requests.\n\n### Security\n- This endpoint does not require authentication for accessing the login functionality.\n",
+        "description": "**User Login**\n\nThis endpoint allows registered users to log in to their account by providing their email and password.\n\n### Required Fields\n- **Email**: The email address associated with the user's account.\n- **Password**: The password for the user's account.\n\n### How to Use\n- **Email**: Enter the email address used during registration.\n- **Password**: Provide the password associated with the email address.\n\nUpon successful login, the response will include an access token that can be used to authenticate further requests.\n\n### Security\n- This endpoint does not require authentication for accessing the login functionality.\n",
         "security": [],
         "requestBody": {
           "content": {
@@ -1384,15 +1218,8 @@
       }
     },
     "schemas": {
-      "recipe": {
+      "recipeResponse": {
         "type": "object",
-        "required": [
-          "title",
-          "category",
-          "instructions",
-          "description",
-          "ingredients"
-        ],
         "properties": {
           "_id": {
             "type": "string",
@@ -1404,9 +1231,19 @@
             "description": "The full name of the recipe",
             "example": "Breakfast Omelette"
           },
+          "description": {
+            "type": "string",
+            "description": "Short description of the recipe",
+            "example": "A light and fluffy omelette perfect for breakfast."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Preparation steps",
+            "example": "Crack the eggs and beat with a fork..."
+          },
           "category": {
             "type": "string",
-            "description": "The full name of the category",
+            "description": "Recipe category",
             "enum": [
               "Seafood",
               "Lamb",
@@ -1426,40 +1263,24 @@
             ],
             "example": "Breakfast"
           },
-          "area": {
-            "type": "string",
-            "description": "The cuisine area (e.g. Italian, Mexican)",
-            "example": "Italian"
-          },
-          "instructions": {
-            "type": "string",
-            "description": "Preparation steps",
-            "example": "Crack the eggs and beat with a fork..."
-          },
-          "description": {
-            "type": "string",
-            "description": "Short description of the recipe",
-            "example": "A light and fluffy omelette perfect for breakfast."
-          },
-          "thumb": {
-            "type": "string",
-            "description": "URL to recipe thumbnail image",
-            "example": "https://example.com/uploads/image.jpg"
-          },
           "time": {
-            "type": "string",
-            "description": "Time needed to prepare the recipe",
-            "example": "30 min"
+            "type": "number",
+            "description": "Cooking time in minutes",
+            "example": 30
           },
           "cals": {
             "type": "number",
-            "description": "Calories per portion",
+            "description": "Calories per portion (optional)",
             "example": 250
+          },
+          "thumb": {
+            "type": "string",
+            "description": "URL to recipe image",
+            "example": "https://example.com/uploads/image.jpg"
           },
           "ingredients": {
             "type": "array",
-            "description": "List of ingredients with their measures",
-            "minItems": 1,
+            "description": "List of ingredients with IDs and measures",
             "items": {
               "type": "object",
               "required": [
@@ -1469,20 +1290,20 @@
               "properties": {
                 "id": {
                   "type": "string",
-                  "description": "Ingredient ID (MongoDB ObjectId, ref to Ingredient)",
+                  "description": "Ingredient ID (MongoDB ObjectId)",
                   "example": "64a1b2c3e25d8c90e88d5678"
                 },
                 "measure": {
                   "type": "string",
-                  "description": "Quantity and unit of the ingredient",
-                  "example": "2 tbsp"
+                  "description": "Quantity and unit",
+                  "example": "2 pcs"
                 }
               }
             }
           },
           "owner": {
             "type": "string",
-            "description": "User ID who created the recipe (MongoDB ObjectId)",
+            "description": "User ID of the recipe creator",
             "example": "68419ace9cd45e2f9773af01"
           },
           "createdAt": {
@@ -1496,6 +1317,101 @@
             "format": "date-time",
             "description": "Last update date",
             "example": "2025-06-29T10:15:00Z"
+          }
+        }
+      },
+      "recipeCreateRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "decr",
+          "cookiesTime",
+          "category",
+          "ingredient",
+          "instruction"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Recipe name (max 64 chars)",
+            "example": "Breakfast Omelette"
+          },
+          "decr": {
+            "type": "string",
+            "description": "Short description (max 200 chars)",
+            "example": "A light and fluffy omelette perfect for breakfast."
+          },
+          "cookiesTime": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 360,
+            "description": "Cooking time in minutes",
+            "example": 30
+          },
+          "cals": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10000,
+            "description": "Calories per portion (optional)",
+            "example": 250
+          },
+          "category": {
+            "type": "string",
+            "description": "Category name",
+            "enum": [
+              "Seafood",
+              "Lamb",
+              "Starter",
+              "Chicken",
+              "Beef",
+              "Dessert",
+              "Vegan",
+              "Pork",
+              "Vegetarian",
+              "Miscellaneous",
+              "Pasta",
+              "Breakfast",
+              "Side",
+              "Goat",
+              "Soup"
+            ],
+            "example": "Breakfast"
+          },
+          "ingredient": {
+            "type": "array",
+            "description": "List of ingredients",
+            "minItems": 2,
+            "maxItems": 16,
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "measure"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Ingredient name",
+                  "example": "Egg"
+                },
+                "measure": {
+                  "type": "string",
+                  "description": "Quantity and unit",
+                  "example": "2 pcs"
+                }
+              }
+            }
+          },
+          "instruction": {
+            "type": "string",
+            "maxLength": 1200,
+            "description": "Full preparation instructions",
+            "example": "Crack the eggs and beat with a fork..."
+          },
+          "recipeImg": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional image file"
           }
         }
       },

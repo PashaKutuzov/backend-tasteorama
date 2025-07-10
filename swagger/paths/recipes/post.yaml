@@ -1,160 +1,22 @@
+operationId: createRecipe
+summary: Create a new recipe
 tags:
   - Recipes
-summary: Create a new recipe
-operationId: createRecipe
-description: Create a new recipe. Requires authentication.
 security:
   - bearerAuth: []
-
 requestBody:
   required: true
   content:
     multipart/form-data:
       schema:
-        type: object
-        required:
-          - name
-          - category
-          - ingredient
-          - instruction
-          - decr
-          - cookiesTime
-        properties:
-          name:
-            type: string
-            minLength: 1
-            maxLength: 64
-            example: Chocolate Cake
-
-          decr:
-            type: string
-            minLength: 1
-            maxLength: 200
-            example: A rich chocolate cake with cream
-
-          cookiesTime:
-            type: integer
-            minimum: 1
-            maximum: 360
-            example: 45
-
-          cals:
-            type: integer
-            minimum: 1
-            maximum: 10000
-            example: 350
-
-          category:
-            type: string
-            description: Category must exist in the categories collection.
-            example: Dessert
-
-          area:
-            type: string
-            minLength: 1
-            maxLength: 100
-            example: Italian
-
-          ingredient:
-            type: array
-            minItems: 2
-            maxItems: 16
-            description: List of ingredients with measures.
-            items:
-              type: object
-              required:
-                - name
-                - measure
-              properties:
-                name:
-                  type: string
-                  example: Flour
-                measure:
-                  type: string
-                  example: 300g
-
-          instruction:
-            type: string
-            minLength: 1
-            maxLength: 1200
-            example: Mix everything and bake at 180°C for 40 min
-
-          thumb:
-            type: string
-            format: binary
-            description: Optional recipe image file (max 2MB)
-
+        $ref: '../../components/schemas/recipeCreateRequest.yaml'
 responses:
   '201':
-    description: Successfully created a recipe
+    description: Recipe successfully created
     content:
       application/json:
         schema:
-          type: object
-          required:
-            - status
-            - message
-            - data
-          properties:
-            status:
-              type: integer
-              example: 201
-            message:
-              type: string
-              example: Successfully created a recipe!
-            data:
-              type: object
-              properties:
-                _id:
-                  type: string
-                  example: 686a93dd70a76a8fd13cc748
-                title:
-                  type: string
-                  example: Chocolate Cake
-                description:
-                  type: string
-                  example: A rich chocolate cake with cream
-                time:
-                  type: integer
-                  example: 45
-                calories:
-                  type: integer
-                  example: 350
-                category:
-                  type: string
-                  example: Dessert
-                area:
-                  type: string
-                  example: Italian
-                instruction:
-                  type: string
-                  example: Mix everything and bake at 180°C for 40 min
-                thumb:
-                  type: string
-                  example: https://res.cloudinary.com/example/image.jpg
-                ingredients:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: 640c2dd963a319ea671e367e
-                      measure:
-                        type: string
-                        example: 300g
-                owner:
-                  type: string
-                  example: 685e469e90ec1af79417e1e0
-                createdAt:
-                  type: string
-                  format: date-time
-                  example: 2025-07-06T15:18:53.977Z
-                updatedAt:
-                  type: string
-                  format: date-time
-                  example: 2025-07-06T15:18:53.977Z
-
+          $ref: '../../components/schemas/recipeResponse.yaml'
   '400':
     description: Bad request (e.g., ingredient not array)
     content:
@@ -168,9 +30,7 @@ responses:
             message:
               type: string
               example: '"ingredient" must be an array'
-
   '401':
     $ref: '../../components/responses/401.yaml'
-
   '500':
     $ref: '../../components/responses/500.yaml'

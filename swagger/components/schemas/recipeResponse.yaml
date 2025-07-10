@@ -1,10 +1,4 @@
 type: object
-required:
-  - title
-  - category
-  - instructions
-  - description
-  - ingredients
 properties:
   _id:
     type: string
@@ -16,9 +10,19 @@ properties:
     description: The full name of the recipe
     example: 'Breakfast Omelette'
 
+  description:
+    type: string
+    description: Short description of the recipe
+    example: 'A light and fluffy omelette perfect for breakfast.'
+
+  instructions:
+    type: string
+    description: Preparation steps
+    example: 'Crack the eggs and beat with a fork...'
+
   category:
     type: string
-    description: The full name of the category
+    description: Recipe category
     enum:
       - Seafood
       - Lamb
@@ -37,40 +41,24 @@ properties:
       - Soup
     example: 'Breakfast'
 
-  area:
-    type: string
-    description: The cuisine area (e.g. Italian, Mexican)
-    example: 'Italian'
-
-  instructions:
-    type: string
-    description: Preparation steps
-    example: 'Crack the eggs and beat with a fork...'
-
-  description:
-    type: string
-    description: Short description of the recipe
-    example: 'A light and fluffy omelette perfect for breakfast.'
-
-  thumb:
-    type: string
-    description: URL to recipe thumbnail image
-    example: 'https://example.com/uploads/image.jpg'
-
   time:
-    type: string
-    description: Time needed to prepare the recipe
-    example: '30 min'
+    type: number
+    description: Cooking time in minutes
+    example: 30
 
   cals:
     type: number
-    description: Calories per portion
+    description: Calories per portion (optional)
     example: 250
+
+  thumb:
+    type: string
+    description: URL to recipe image
+    example: 'https://example.com/uploads/image.jpg'
 
   ingredients:
     type: array
-    description: List of ingredients with their measures
-    minItems: 1
+    description: List of ingredients with IDs and measures
     items:
       type: object
       required:
@@ -79,16 +67,16 @@ properties:
       properties:
         id:
           type: string
-          description: Ingredient ID (MongoDB ObjectId, ref to Ingredient)
+          description: Ingredient ID (MongoDB ObjectId)
           example: '64a1b2c3e25d8c90e88d5678'
         measure:
           type: string
-          description: Quantity and unit of the ingredient
-          example: '2 tbsp'
+          description: Quantity and unit
+          example: '2 pcs'
 
   owner:
     type: string
-    description: User ID who created the recipe (MongoDB ObjectId)
+    description: User ID of the recipe creator
     example: '68419ace9cd45e2f9773af01'
 
   createdAt:

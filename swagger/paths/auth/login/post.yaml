@@ -10,12 +10,10 @@ description: |
   ### Required Fields
   - **Email**: The email address associated with the user's account.
   - **Password**: The password for the user's account.
-  - **Privacy Policy Accepted At**: ISO 8601 date-time string indicating when user accepted the privacy policy.
 
   ### How to Use
   - **Email**: Enter the email address used during registration.
   - **Password**: Provide the password associated with the email address.
-  - **Privacy Policy Accepted At**: Usually sent during registration, but may be required in specific flows.
 
   Upon successful login, the response will include an access token that can be used to authenticate further requests.
 
