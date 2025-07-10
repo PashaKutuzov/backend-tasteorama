@@ -24,7 +24,7 @@ description: |
 security: []
 requestBody:
   content:
-    application/x-www-form-urlencoded:
+    application/json:
       schema:
         type: object
         required:
@@ -61,7 +61,7 @@ responses:
               description: 'HTTP status code indicating a successful login'
             message:
               type: string
-              example: 'Successfully logged in!'
+              example: 'Login successfully!'
               description: 'Confirmation message indicating successful login'
             data:
               type: object

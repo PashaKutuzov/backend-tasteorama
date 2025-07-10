@@ -67,7 +67,7 @@ parameters:
 
 responses:
   '200':
-    description: Recipes found successfully
+    description: Successfully found all recipes!
     content:
       application/json:
         schema:
@@ -82,7 +82,7 @@ responses:
               example: 200
             message:
               type: string
-              example: Recipes retrieved successfully
+              example: Successfully found all recipes!
             data:
               type: object
               required:
@@ -91,31 +91,23 @@ responses:
                 - perPage
                 - totalItems
                 - totalPages
-                - hasNextPage
-                - hasPreviousPage
               properties:
                 recipes:
                   type: array
                   items:
-                    $ref: '../../components/schemas/recipe.yaml'
+                  $ref: '../../components/schemas/recipe.yaml'
                 page:
                   type: integer
                   example: 1
                 perPage:
                   type: integer
-                  example: 10
+                  example: 12
                 totalItems:
                   type: integer
-                  example: 40
+                  example: 35
                 totalPages:
                   type: integer
-                  example: 4
-                hasNextPage:
-                  type: boolean
-                  example: true
-                hasPreviousPage:
-                  type: boolean
-                  example: false
+                  example: 3
 
   '400':
     description: Bad Request - Invalid query parameters
