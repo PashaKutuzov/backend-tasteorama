@@ -27,7 +27,7 @@ responses:
             data:
               type: array
               items:
-                $ref: '../../../components/schemas/recipe.yaml'
+                $ref: ../../../components/schemas/recipeResponse.yaml
 
   '401':
     $ref: '../../../components/responses/401.yaml'

@@ -1,0 +1,33 @@
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - email
+          - password
+          - privacyPolicyAccepted
+        properties:
+          name:
+            type: string
+            maxLength: 16
+            description: "User's full name"
+            example: 'User One'
+          email:
+            type: string
+            format: email
+            maxLength: 128
+            description: "User's email address"
+            example: 'userone@example.com'
+          password:
+            type: string
+            minLength: 8
+            maxLength: 128
+            description: "User's password"
+            example: '123Qwe!xX'
+          privacyPolicyAccepted:
+            type: boolean
+            enum: [true]
+            description: 'User must accept privacy policy (true)'
+            example: true

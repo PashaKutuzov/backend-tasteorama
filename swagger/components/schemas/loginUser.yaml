@@ -1,0 +1,21 @@
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            format: email
+            maxLength: 128
+            description: "User's email address"
+            example: 'userone@example.com'
+          password:
+            type: string
+            minLength: 8
+            maxLength: 128
+            description: "User's password"
+            example: '123Qwe!xX'
